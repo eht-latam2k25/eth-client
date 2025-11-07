@@ -1,75 +1,131 @@
 "use client";
 
 import Link from "next/link";
-import { Address } from "@scaffold-ui/components";
 import type { NextPage } from "next";
-import { hardhat } from "viem/chains";
-import { useAccount } from "wagmi";
-import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth";
+import { CpuChipIcon, ShieldCheckIcon, SparklesIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 
 const Home: NextPage = () => {
-  const { address: connectedAddress } = useAccount();
-  const { targetNetwork } = useTargetNetwork();
-
   return (
     <>
       <div className="flex items-center flex-col grow pt-10">
-        <div className="px-5">
-          <h1 className="text-center">
-            <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
-          </h1>
-          <div className="flex justify-center items-center space-x-2 flex-col">
-            <p className="my-2 font-medium">Connected Address:</p>
-            <Address
-              address={connectedAddress}
-              chain={targetNetwork}
-              blockExplorerAddressLink={
-                targetNetwork.id === hardhat.id ? `/blockexplorer/address/${connectedAddress}` : undefined
-              }
-            />
+        {/* Hero Section */}
+        <div className="px-5 max-w-5xl w-full">
+          <div className="text-center mb-12">
+            <h1 className="text-center mb-8">
+              <span className="block text-3xl mb-3 text-primary">Bem-vindo ao</span>
+              <span className="block text-5xl md:text-6xl font-bold text-primary">Sua Aplicação</span>
+            </h1>
+            <p className="text-xl text-base-content/70 max-w-2xl mx-auto">
+              Uma plataforma moderna e segura para gerenciar suas necessidades
+            </p>
           </div>
 
-          <p className="text-center text-lg">
-            Get started by editing{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/nextjs/app/page.tsx
-            </code>
-          </p>
-          <p className="text-center text-lg">
-            Edit your smart contract{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              YourContract.sol
-            </code>{" "}
-            in{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/hardhat/contracts
-            </code>
-          </p>
+          {/* CTA Buttons */}
+          <div className="flex justify-center gap-4 mb-16 flex-wrap">
+            <Link href="/licitacoes">
+              <button className="btn btn-primary btn-lg gap-2 px-8 shadow-lg hover:shadow-xl transition-all">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                  />
+                </svg>
+                Ver Licitações
+              </button>
+            </Link>
+            <Link href="/auth">
+              <button className="btn btn-outline btn-lg gap-2 px-8 shadow-lg hover:shadow-xl transition-all">
+                <UserGroupIcon className="w-6 h-6" />
+                Fazer Login
+              </button>
+            </Link>
+          </div>
         </div>
 
-        <div className="grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col md:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <BugAntIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contracts
-                </Link>{" "}
-                tab.
-              </p>
+        {/* Features Section */}
+        <div className="grow bg-base-300 w-full px-8 py-16">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl font-bold text-center mb-12">Recursos Principais</h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              {/* Feature 1 */}
+              <div className="flex flex-col bg-base-100 px-8 py-10 text-center items-center rounded-3xl shadow-lg hover:shadow-xl transition-shadow">
+                <div className="bg-primary/10 p-4 rounded-2xl mb-4">
+                  <ShieldCheckIcon className="h-12 w-12 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold mb-3">Seguro e Confiável</h3>
+                <p className="text-base-content/70">
+                  Suas informações estão protegidas com as melhores práticas de segurança
+                </p>
+              </div>
+
+              {/* Feature 2 */}
+              <div className="flex flex-col bg-base-100 px-8 py-10 text-center items-center rounded-3xl shadow-lg hover:shadow-xl transition-shadow">
+                <div className="bg-secondary/10 p-4 rounded-2xl mb-4">
+                  <CpuChipIcon className="h-12 w-12 text-secondary" />
+                </div>
+                <h3 className="text-xl font-bold mb-3">Tecnologia Moderna</h3>
+                <p className="text-base-content/70">Construído com as tecnologias mais recentes e eficientes</p>
+              </div>
+
+              {/* Feature 3 */}
+              <div className="flex flex-col bg-base-100 px-8 py-10 text-center items-center rounded-3xl shadow-lg hover:shadow-xl transition-shadow">
+                <div className="bg-accent/10 p-4 rounded-2xl mb-4">
+                  <SparklesIcon className="h-12 w-12 text-accent" />
+                </div>
+                <h3 className="text-xl font-bold mb-3">Fácil de Usar</h3>
+                <p className="text-base-content/70">Interface intuitiva e amigável para uma experiência perfeita</p>
+              </div>
             </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
+
+            {/* Stats Section */}
+            <div className="bg-base-100 rounded-3xl p-8 shadow-lg">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div>
+                  <div className="text-4xl font-bold text-primary mb-2">10k+</div>
+                  <div className="text-base-content/70">Usuários Ativos</div>
+                </div>
+                <div>
+                  <div className="text-4xl font-bold text-secondary mb-2">99.9%</div>
+                  <div className="text-base-content/70">Uptime</div>
+                </div>
+                <div>
+                  <div className="text-4xl font-bold text-accent mb-2">24/7</div>
+                  <div className="text-base-content/70">Suporte</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Final CTA */}
+            <div className="text-center mt-12">
+              <p className="text-lg mb-6 text-base-content/70">Pronto para começar sua jornada?</p>
+              <Link href="/licitacoes">
+                <button className="btn btn-primary btn-lg gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                    />
+                  </svg>
+                  Explorar Licitações
+                </button>
+              </Link>
             </div>
           </div>
         </div>
