@@ -83,7 +83,8 @@ const Auth: NextPage = () => {
       if (isLogin) {
         console.log("Login:", { email: formData.email, password: formData.password });
         // Aqui você pode adicionar a lógica de login
-        alert("Login realizado com sucesso!");
+        // Redirecionar para seleção de perfil
+        window.location.href = "/selecionar-perfil";
       } else {
         console.log("Signup:", {
           name: formData.name,
@@ -91,7 +92,8 @@ const Auth: NextPage = () => {
           password: formData.password,
         });
         // Aqui você pode adicionar a lógica de cadastro
-        alert("Cadastro realizado com sucesso!");
+        // Redirecionar para seleção de perfil
+        window.location.href = "/selecionar-perfil";
       }
     }
   };

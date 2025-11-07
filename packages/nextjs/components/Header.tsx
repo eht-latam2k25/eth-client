@@ -86,8 +86,8 @@ export const Header = () => {
             <Image alt="App logo" className="cursor-pointer" fill src="/logo.svg" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold leading-tight">Sua Aplicação</span>
-            <span className="text-xs">Plataforma moderna</span>
+            <span className="font-bold leading-tight">OnLicit</span>
+            <span className="text-xs">Licitações Online</span>
           </div>
         </Link>
         <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">

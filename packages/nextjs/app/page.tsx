@@ -13,7 +13,7 @@ const Home: NextPage = () => {
           <div className="text-center mb-12">
             <h1 className="text-center mb-8">
               <span className="block text-3xl mb-3 text-primary">Bem-vindo ao</span>
-              <span className="block text-5xl md:text-6xl font-bold text-primary">Sua Aplicação</span>
+              <span className="block text-5xl md:text-6xl font-bold text-primary">OnLicit</span>
             </h1>
             <p className="text-xl text-base-content/70 max-w-2xl mx-auto">
               Uma plataforma moderna e segura para gerenciar suas necessidades

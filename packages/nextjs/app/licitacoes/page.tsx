@@ -104,35 +104,29 @@ const Licitacoes: NextPage = () => {
 
   return (
     <div className="min-h-screen bg-base-100">
-      {/* Header com busca */}
-      <div className="bg-black text-white py-6 px-4 sm:px-6 lg:px-8">
+      {/* Barra de busca e filtros */}
+      <div className="bg-base-100 py-4 px-4 sm:px-6 lg:px-8 border-b border-base-300">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-[#93BBFB] mb-1">Licitações</h1>
-            <p className="text-gray-300 text-sm">Explore e participe das licitações disponíveis</p>
-          </div>
-
-          {/* Barra de busca e filtros */}
           <div className="flex flex-col md:flex-row gap-3">
             {/* Campo de busca */}
             <div className="flex-1 relative">
-              <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/40" />
               <input
                 type="text"
                 placeholder="Buscar licitações..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="input input-bordered w-full pl-10 bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-[#93BBFB]"
+                className="input input-bordered w-full pl-10"
               />
             </div>
 
             {/* Filtro por status */}
             <div className="flex items-center gap-2">
-              <FunnelIcon className="w-5 h-5 text-gray-400" />
+              <FunnelIcon className="w-5 h-5 text-base-content/40" />
               <select
                 value={filterStatus}
                 onChange={e => setFilterStatus(e.target.value)}
-                className="select select-bordered bg-white/10 border-white/20 text-white focus:border-[#93BBFB]"
+                className="select select-bordered"
               >
                 <option value="todas">Todas</option>
                 <option value="aberta">Abertas</option>
@@ -165,7 +159,7 @@ const Licitacoes: NextPage = () => {
         </div>
 
         {/* Grid de cards */}
-        <div className="grid gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {licitacoesFiltradas.length > 0 ? (
             licitacoesFiltradas.map(licitacao => (
               <div
