@@ -3,29 +3,22 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { NextPage } from "next";
-import { EnvelopeIcon, LockClosedIcon, UserIcon } from "@heroicons/react/24/outline";
+import { LockClosedIcon, UserIcon } from "@heroicons/react/24/outline";
 import { baseProvider } from "~~/services/base/baseAccountSDK";
 import { type UserType, setUserType } from "~~/utils/auth";
 
 const Auth: NextPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    username: "",
     password: "",
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({
-    name: "",
-    email: "",
+    username: "",
     password: "",
     confirmPassword: "",
   });
-
-  const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,23 +29,17 @@ const Auth: NextPage = () => {
 
   const validateForm = () => {
     const newErrors = {
-      name: "",
-      email: "",
+      username: "",
       password: "",
       confirmPassword: "",
     };
     let isValid = true;
 
-    if (!isLogin && !formData.name.trim()) {
-      newErrors.name = "Name is required";
+    if (!formData.username.trim()) {
+      newErrors.username = "Username is required";
       isValid = false;
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-      isValid = false;
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = "Invalid email";
+    } else if (formData.username.length < 3) {
+      newErrors.username = "Username must be at least 3 characters";
       isValid = false;
     }
 
@@ -83,7 +70,7 @@ const Auth: NextPage = () => {
 
     if (validateForm()) {
       if (isLogin) {
-        console.log("Login:", { email: formData.email, password: formData.password });
+        console.log("Login:", { username: formData.username, password: formData.password });
 
         // TODO: Aqui você fará a requisição para o backend
         // const response = await fetch('/api/auth/login', { ... });
@@ -91,16 +78,15 @@ const Auth: NextPage = () => {
         // localStorage.setItem('token', token);
 
         // Mock: Simula resposta do JWT
-        // Para teste: emails com @gov.br redirecionam para governo
-        const userType: UserType = formData.email.includes("@gov.br") ? "governo" : "participante";
+        // Para teste: usernames começando com "gov" redirecionam para governo
+        const userType: UserType = formData.username.toLowerCase().startsWith("gov") ? "governo" : "participante";
         setUserType(userType);
 
         // Redireciona baseado no tipo de usuário do JWT
         window.location.href = userType === "governo" ? "/governo/dashboard" : "/participante/dashboard";
       } else {
         console.log("Signup:", {
-          name: formData.name,
-          email: formData.email,
+          username: formData.username,
           password: formData.password,
         });
 
@@ -173,8 +159,7 @@ const Auth: NextPage = () => {
           console.log("✅ PROCESSO CONCLUÍDO!");
           console.log("═══════════════════════════════════════");
           console.log("📊 RESUMO:");
-          console.log("  • Nome:", formData.name);
-          console.log("  • Email:", formData.email);
+          console.log("  • Username:", formData.username);
           console.log("  • Universal Address:", universalAddress);
           console.log("  • Sub Account:", subAccountAddress);
           console.log("═══════════════════════════════════════");
@@ -183,8 +168,7 @@ const Auth: NextPage = () => {
           // await fetch('/api/auth/signup', {
           //   method: 'POST',
           //   body: JSON.stringify({
-          //     name: formData.name,
-          //     email: formData.email,
+          //     username: formData.username,
           //     password: formData.password,
           //     universalAddress: universalAddress,
           //     subAccountAddress: subAccountAddress
@@ -192,7 +176,8 @@ const Auth: NextPage = () => {
           // });
 
           // Mock: Simula resposta do JWT após cadastro
-          const userType: UserType = formData.email.includes("@gov.br") ? "governo" : "participante";
+          // Usernames começando com "gov" são governo
+          const userType: UserType = formData.username.toLowerCase().startsWith("gov") ? "governo" : "participante";
           setUserType(userType);
 
           alert(
@@ -215,14 +200,12 @@ const Auth: NextPage = () => {
   const toggleMode = () => {
     setIsLogin(!isLogin);
     setFormData({
-      name: "",
-      email: "",
+      username: "",
       password: "",
       confirmPassword: "",
     });
     setErrors({
-      name: "",
-      email: "",
+      username: "",
       password: "",
       confirmPassword: "",
     });
@@ -267,50 +250,29 @@ const Auth: NextPage = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
-            {/* Name Field (only for signup) */}
-            {!isLogin && (
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-2">
-                  Full Name
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <UserIcon className="h-5 w-5 text-base-content/40" />
-                  </div>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className={`input input-bordered w-full pl-10 ${errors.name ? "input-error" : ""}`}
-                    placeholder="João Silva"
-                  />
-                </div>
-                {errors.name && <p className="text-error text-sm mt-1">{errors.name}</p>}
-              </div>
-            )}
-
-            {/* Email Field */}
+            {/* Username Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-2">
-                Email
+              <label htmlFor="username" className="block text-sm font-medium mb-2">
+                Username
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <EnvelopeIcon className="h-5 w-5 text-base-content/40" />
+                  <UserIcon className="h-5 w-5 text-base-content/40" />
                 </div>
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
+                  id="username"
+                  name="username"
+                  type="text"
+                  value={formData.username}
                   onChange={handleInputChange}
-                  className={`input input-bordered w-full pl-10 ${errors.email ? "input-error" : ""}`}
-                  placeholder="seu@email.com"
+                  className={`input input-bordered w-full pl-10 ${errors.username ? "input-error" : ""}`}
+                  placeholder={isLogin ? "Enter your username" : "Choose a username"}
                 />
               </div>
-              {errors.email && <p className="text-error text-sm mt-1">{errors.email}</p>}
+              {errors.username && <p className="text-error text-sm mt-1">{errors.username}</p>}
+              {!isLogin && (
+                <p className="text-xs text-base-content/60 mt-1">Tip: Use &quot;gov...&quot; for government accounts</p>
+              )}
             </div>
 
             {/* Password Field */}
