@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import type { NextPage } from "next";
 import { EnvelopeIcon, LockClosedIcon, UserIcon } from "@heroicons/react/24/outline";
+import { baseProvider } from "~~/services/base/baseAccountSDK";
+import { type UserType, setUserType } from "~~/utils/auth";
 
 const Auth: NextPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -76,24 +78,136 @@ const Auth: NextPage = () => {
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (validateForm()) {
       if (isLogin) {
         console.log("Login:", { email: formData.email, password: formData.password });
-        // Aqui você pode adicionar a lógica de login
-        // Redirecionar para seleção de perfil
-        window.location.href = "/selecionar-perfil";
+
+        // TODO: Aqui você fará a requisição para o backend
+        // const response = await fetch('/api/auth/login', { ... });
+        // const { token, userType } = response.json();
+        // localStorage.setItem('token', token);
+
+        // Mock: Simula resposta do JWT
+        // Para teste: emails com @gov.br redirecionam para governo
+        const userType: UserType = formData.email.includes("@gov.br") ? "governo" : "participante";
+        setUserType(userType);
+
+        // Redireciona baseado no tipo de usuário do JWT
+        window.location.href = userType === "governo" ? "/governo/dashboard" : "/participante/dashboard";
       } else {
         console.log("Signup:", {
           name: formData.name,
           email: formData.email,
           password: formData.password,
         });
-        // Aqui você pode adicionar a lógica de cadastro
-        // Redirecionar para seleção de perfil
-        window.location.href = "/selecionar-perfil";
+
+        try {
+          console.log("═══════════════════════════════════════");
+          console.log("🔷 CRIANDO CONTA - Processo BASE Account");
+          console.log("═══════════════════════════════════════");
+
+          // PASSO 1: Conectar conta universal
+          console.log("🔄 PASSO 1: Conectando Universal Account...");
+          const accounts = (await baseProvider.request({
+            method: "eth_requestAccounts",
+            params: [],
+          })) as string[];
+
+          const universalAddress = accounts[0];
+          console.log("✅ Universal Account conectada!");
+          console.log("📍 Universal Address:", universalAddress);
+
+          // PASSO 2: Verificar se já existe Sub Account
+          console.log("\n🔄 PASSO 2: Verificando Sub Accounts existentes...");
+          const result = (await baseProvider.request({
+            method: "wallet_getSubAccounts",
+            params: [
+              {
+                account: universalAddress,
+                domain: window.location.origin,
+              },
+            ],
+          })) as { subAccounts: Array<{ address: string; type: string }> };
+
+          let subAccountAddress = "";
+
+          if (result.subAccounts && result.subAccounts.length > 0) {
+            // Já existe Sub Account
+            const existingSub = result.subAccounts[0];
+            subAccountAddress = existingSub.address;
+
+            console.log("✅ Sub Account EXISTENTE encontrada!");
+            console.log("📍 Sub Account Address:", subAccountAddress);
+            console.log("📦 Dados completos:", existingSub);
+
+            // Salva no localStorage
+            localStorage.setItem("subAccount", JSON.stringify(existingSub));
+          } else {
+            // Criar nova Sub Account
+            console.log("ℹ️ Nenhuma Sub Account encontrada.");
+            console.log("\n🔄 PASSO 3: Criando NOVA Sub Account...");
+
+            const newSubAccount = (await baseProvider.request({
+              method: "wallet_addSubAccount",
+              params: [
+                {
+                  account: { type: "create" },
+                },
+              ],
+            })) as { address: string; type: string };
+
+            subAccountAddress = newSubAccount.address;
+
+            console.log("✅ NOVA Sub Account criada com sucesso!");
+            console.log("📍 Sub Account Address:", subAccountAddress);
+            console.log("📦 Dados completos:", newSubAccount);
+
+            // Salva no localStorage
+            localStorage.setItem("subAccount", JSON.stringify(newSubAccount));
+          }
+
+          console.log("\n═══════════════════════════════════════");
+          console.log("✅ PROCESSO CONCLUÍDO!");
+          console.log("═══════════════════════════════════════");
+          console.log("📊 RESUMO:");
+          console.log("  • Nome:", formData.name);
+          console.log("  • Email:", formData.email);
+          console.log("  • Universal Address:", universalAddress);
+          console.log("  • Sub Account:", subAccountAddress);
+          console.log("═══════════════════════════════════════");
+
+          // TODO: Salvar no backend
+          // await fetch('/api/auth/signup', {
+          //   method: 'POST',
+          //   body: JSON.stringify({
+          //     name: formData.name,
+          //     email: formData.email,
+          //     password: formData.password,
+          //     universalAddress: universalAddress,
+          //     subAccountAddress: subAccountAddress
+          //   })
+          // });
+
+          // Mock: Simula resposta do JWT após cadastro
+          const userType: UserType = formData.email.includes("@gov.br") ? "governo" : "participante";
+          setUserType(userType);
+
+          alert(
+            `Conta criada com sucesso!\n\nSub Account: ${subAccountAddress}\n\nVerifique o console para mais detalhes.`,
+          );
+
+          // Redireciona baseado no tipo de usuário
+          window.location.href = userType === "governo" ? "/governo/dashboard" : "/participante/dashboard";
+        } catch (error) {
+          console.error("═══════════════════════════════════════");
+          console.error("❌ ERRO ao criar conta e Sub Account:");
+          console.error(error);
+          console.error("═══════════════════════════════════════");
+          alert("Erro ao criar conta. Certifique-se de ter uma carteira Web3 instalada (Coinbase Wallet ou MetaMask).");
+        }
       }
     }
   };
@@ -124,9 +238,7 @@ const Auth: NextPage = () => {
             <h1 className="text-xl font-bold text-primary-content mb-1">
               {isLogin ? "Welcome back!" : "Create your account"}
             </h1>
-            <p className="text-sm text-primary-content/80">
-              {isLogin ? "Sign in to continue" : "Join us today"}
-            </p>
+            <p className="text-sm text-primary-content/80">{isLogin ? "Sign in to continue" : "Join us today"}</p>
           </div>
 
           {/* Toggle Tabs */}
@@ -158,9 +270,9 @@ const Auth: NextPage = () => {
             {/* Name Field (only for signup) */}
             {!isLogin && (
               <div>
-                  <label htmlFor="name" className="block text-sm font-medium mb-2">
-                    Full Name
-                  </label>
+                <label htmlFor="name" className="block text-sm font-medium mb-2">
+                  Full Name
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <UserIcon className="h-5 w-5 text-base-content/40" />

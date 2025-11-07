@@ -14,6 +14,7 @@ import {
   EyeIcon,
   PlusIcon,
 } from "@heroicons/react/24/outline";
+import { BaseAccountConnect } from "~~/components/BaseAccountConnect";
 
 const GovernoHome: NextPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -101,6 +102,11 @@ const GovernoHome: NextPage = () => {
           </div>
         </div>
 
+        {/* Componente de Conexão BASE Account */}
+        <div className="mb-8">
+          <BaseAccountConnect />
+        </div>
+
         {/* Ações rápidas melhoradas */}
         <h2 className="text-2xl font-bold mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -136,9 +142,7 @@ const GovernoHome: NextPage = () => {
                     <p className="text-xs text-base-content/60">View and manage</p>
                   </div>
                 </div>
-                <div className="text-sm text-base-content/70">
-                  Access all created bids and track status
-                </div>
+                <div className="text-sm text-base-content/70">Access all created bids and track status</div>
               </div>
             </div>
           </Link>
@@ -151,9 +155,7 @@ const GovernoHome: NextPage = () => {
                     <CheckCircleIcon className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold text-lg group-hover:text-primary transition-colors">
-                      Received Proposals
-                    </h3>
+                    <h3 className="font-bold text-lg group-hover:text-primary transition-colors">Received Proposals</h3>
                     <p className="text-xs text-base-content/60">Analyze and compare</p>
                   </div>
                 </div>

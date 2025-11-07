@@ -9,6 +9,7 @@ import {
   DocumentTextIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import { BaseAccountConnect } from "~~/components/BaseAccountConnect";
 
 const ParticipanteHome: NextPage = () => {
   return (
@@ -22,6 +23,10 @@ const ParticipanteHome: NextPage = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Componente de Conexão BASE Account */}
+        <div className="mb-8">
+          <BaseAccountConnect />
+        </div>
         {/* Cards de estatísticas */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="stat bg-base-100 border-2 border-base-300 rounded-lg">
