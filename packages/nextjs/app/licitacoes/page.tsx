@@ -153,8 +153,7 @@ const Licitacoes: NextPage = () => {
         {/* Results counter */}
         <div className="mb-3">
           <p className="text-sm text-base-content/60">
-            {filteredBids.length}{" "}
-            {filteredBids.length === 1 ? "bid found" : "bids found"}
+            {filteredBids.length} {filteredBids.length === 1 ? "bid found" : "bids found"}
           </p>
         </div>
 
@@ -172,11 +171,7 @@ const Licitacoes: NextPage = () => {
                     <div className="flex-1">
                       <div className="flex items-start gap-2 mb-2">
                         <div className="badge badge-primary badge-sm mt-1">
-                          {bid.status === "open"
-                            ? "Open"
-                            : bid.status === "closed"
-                              ? "Closed"
-                              : "Under Review"}
+                          {bid.status === "open" ? "Open" : bid.status === "closed" ? "Closed" : "Under Review"}
                         </div>
                         <h2 className="text-lg font-bold text-base-content hover:text-[#93BBFB] transition-colors">
                           {bid.name}

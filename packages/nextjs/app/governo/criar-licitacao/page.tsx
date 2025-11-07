@@ -210,9 +210,7 @@ const CriarLicitacao: NextPage = () => {
                       className={`input input-bordered w-full pl-10 ${errors.closingDate ? "input-error" : ""}`}
                     />
                   </div>
-                  {errors.closingDate && (
-                    <span className="text-error text-sm mt-1">{errors.closingDate}</span>
-                  )}
+                  {errors.closingDate && <span className="text-error text-sm mt-1">{errors.closingDate}</span>}
                 </div>
 
                 <div className="form-control">
@@ -226,9 +224,7 @@ const CriarLicitacao: NextPage = () => {
                     onChange={handleInputChange}
                     className={`input input-bordered w-full ${errors.closingTime ? "input-error" : ""}`}
                   />
-                  {errors.closingTime && (
-                    <span className="text-error text-sm mt-1">{errors.closingTime}</span>
-                  )}
+                  {errors.closingTime && <span className="text-error text-sm mt-1">{errors.closingTime}</span>}
                 </div>
               </div>
             </div>

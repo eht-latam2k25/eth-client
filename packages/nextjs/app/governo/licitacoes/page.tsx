@@ -128,8 +128,7 @@ const GovernoLicitacoes: NextPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-4">
           <p className="text-sm text-base-content/60">
-            {filteredBids.length}{" "}
-            {filteredBids.length === 1 ? "bid found" : "bids found"}
+            {filteredBids.length} {filteredBids.length === 1 ? "bid found" : "bids found"}
           </p>
         </div>
 
@@ -154,11 +153,7 @@ const GovernoLicitacoes: NextPage = () => {
                                 : "badge-warning"
                           }`}
                         >
-                          {bid.status === "open"
-                            ? "Open"
-                            : bid.status === "closed"
-                              ? "Closed"
-                              : "Under Review"}
+                          {bid.status === "open" ? "Open" : bid.status === "closed" ? "Closed" : "Under Review"}
                         </span>
                         <h3 className="font-bold text-lg">{bid.name}</h3>
                       </div>
@@ -205,7 +200,7 @@ const GovernoLicitacoes: NextPage = () => {
               <div className="bg-base-200 rounded-2xl p-8 max-w-md mx-auto">
                 <MagnifyingGlassIcon className="w-16 h-16 mx-auto text-base-content/30 mb-4" />
                 <h3 className="text-xl font-bold mb-2">No bids found</h3>
-                <p className="text-base-content/60 mb-4">You haven't created any bids yet</p>
+                <p className="text-base-content/60 mb-4">You haven&apos;t created any bids yet</p>
                 <button onClick={() => setIsModalOpen(true)} className="btn btn-primary gap-2">
                   <PlusIcon className="w-5 h-5" />
                   Create First Bid

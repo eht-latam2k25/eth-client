@@ -137,7 +137,9 @@ export const ModalCriarLicitacao = ({ isOpen, onClose }: ModalCriarLicitacaoProp
                         className={`input input-bordered w-full pl-10 ${errors.contractingParty ? "input-error" : ""}`}
                       />
                     </div>
-                    {errors.contractingParty && <span className="text-error text-sm mt-1">{errors.contractingParty}</span>}
+                    {errors.contractingParty && (
+                      <span className="text-error text-sm mt-1">{errors.contractingParty}</span>
+                    )}
                   </div>
 
                   {/* Category */}
@@ -223,9 +225,7 @@ export const ModalCriarLicitacao = ({ isOpen, onClose }: ModalCriarLicitacaoProp
                         onChange={handleInputChange}
                         className={`input input-bordered w-full ${errors.closingDate ? "input-error" : ""}`}
                       />
-                      {errors.closingDate && (
-                        <span className="text-error text-sm mt-1">{errors.closingDate}</span>
-                      )}
+                      {errors.closingDate && <span className="text-error text-sm mt-1">{errors.closingDate}</span>}
                     </div>
 
                     <div className="form-control">
@@ -239,24 +239,22 @@ export const ModalCriarLicitacao = ({ isOpen, onClose }: ModalCriarLicitacaoProp
                         onChange={handleInputChange}
                         className={`input input-bordered w-full ${errors.closingTime ? "input-error" : ""}`}
                       />
-                      {errors.closingTime && (
-                        <span className="text-error text-sm mt-1">{errors.closingTime}</span>
-                      )}
+                      {errors.closingTime && <span className="text-error text-sm mt-1">{errors.closingTime}</span>}
                     </div>
                   </div>
                 </div>
 
                 {/* Documents (Optional) */}
                 <div className="form-control">
-                      <label className="label">
-                        <span className="label-text font-semibold">Requirements and Documents</span>
-                        <span className="label-text-alt text-base-content/60">Optional</span>
-                      </label>
-                      <textarea
-                        name="requirements"
-                        value={formData.requirements}
-                        onChange={handleInputChange}
-                        placeholder="List requirements and necessary documents..."
+                  <label className="label">
+                    <span className="label-text font-semibold">Requirements and Documents</span>
+                    <span className="label-text-alt text-base-content/60">Optional</span>
+                  </label>
+                  <textarea
+                    name="requirements"
+                    value={formData.requirements}
+                    onChange={handleInputChange}
+                    placeholder="List requirements and necessary documents..."
                     className="textarea textarea-bordered h-20"
                   />
                 </div>
@@ -265,12 +263,12 @@ export const ModalCriarLicitacao = ({ isOpen, onClose }: ModalCriarLicitacaoProp
               {/* Buttons */}
               <div className="flex gap-3 mt-6 pt-6 border-t border-base-300">
                 <button type="button" onClick={onClose} className="btn btn-ghost flex-1">
-                Cancel
-              </button>
-              <button type="submit" className="btn btn-primary flex-1 gap-2">
-                <DocumentTextIcon className="w-5 h-5" />
-                Create Bid
-              </button>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary flex-1 gap-2">
+                  <DocumentTextIcon className="w-5 h-5" />
+                  Create Bid
+                </button>
               </div>
             </form>
           </div>
