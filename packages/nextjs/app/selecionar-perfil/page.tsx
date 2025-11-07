@@ -10,8 +10,8 @@ const SelecionarPerfil: NextPage = () => {
       <div className="max-w-5xl w-full">
         {/* Título */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-primary mb-3">Bem-vindo à Plataforma</h1>
-          <p className="text-lg text-base-content/70">Selecione como deseja acessar o sistema</p>
+          <h1 className="text-4xl font-bold text-primary mb-3">Welcome to the Platform</h1>
+          <p className="text-lg text-base-content/70">Select how you want to access the system</p>
         </div>
 
         {/* Cards de seleção */}
@@ -23,25 +23,25 @@ const SelecionarPerfil: NextPage = () => {
                 <div className="bg-primary/10 p-6 rounded-full mb-6 group-hover:bg-primary/20 transition-colors">
                   <BuildingOfficeIcon className="w-16 h-16 text-primary" />
                 </div>
-                <h2 className="card-title text-2xl mb-3 group-hover:text-primary transition-colors">Governo</h2>
+                <h2 className="card-title text-2xl mb-3 group-hover:text-primary transition-colors">Government</h2>
                 <p className="text-base-content/70 mb-6">
-                  Acesse como órgão governamental para criar, gerenciar e acompanhar licitações públicas
+                  Access as a government agency to create, manage and track public bids
                 </p>
                 <div className="space-y-2 text-sm text-left w-full">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                    <span>Criar novas licitações</span>
+                    <span>Create new bids</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                    <span>Gerenciar propostas recebidas</span>
+                    <span>Manage received proposals</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                    <span>Acompanhar processos</span>
+                    <span>Track processes</span>
                   </div>
                 </div>
-                <button className="btn btn-primary w-full mt-6">Acessar como Governo</button>
+                <button className="btn btn-primary w-full mt-6">Access as Government</button>
               </div>
             </div>
           </Link>
@@ -53,25 +53,25 @@ const SelecionarPerfil: NextPage = () => {
                 <div className="bg-primary/10 p-6 rounded-full mb-6 group-hover:bg-primary/20 transition-colors">
                   <UserGroupIcon className="w-16 h-16 text-primary" />
                 </div>
-                <h2 className="card-title text-2xl mb-3 group-hover:text-primary transition-colors">Participante</h2>
+                <h2 className="card-title text-2xl mb-3 group-hover:text-primary transition-colors">Participant</h2>
                 <p className="text-base-content/70 mb-6">
-                  Acesse como empresa ou pessoa física para participar de licitações públicas
+                  Access as a company or individual to participate in public bids
                 </p>
                 <div className="space-y-2 text-sm text-left w-full">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                    <span>Buscar licitações disponíveis</span>
+                    <span>Search available bids</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                    <span>Enviar propostas</span>
+                    <span>Submit proposals</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                    <span>Acompanhar participações</span>
+                    <span>Track participations</span>
                   </div>
                 </div>
-                <button className="btn btn-primary w-full mt-6">Acessar como Participante</button>
+                <button className="btn btn-primary w-full mt-6">Access as Participant</button>
               </div>
             </div>
           </Link>
@@ -80,7 +80,7 @@ const SelecionarPerfil: NextPage = () => {
         {/* Link para voltar */}
         <div className="text-center mt-8">
           <Link href="/" className="link link-primary">
-            ← Voltar para página inicial
+            ← Back to home page
           </Link>
         </div>
       </div>
