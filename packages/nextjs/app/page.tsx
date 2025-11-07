@@ -16,7 +16,8 @@ const Home: NextPage = () => {
               <span className="block text-5xl md:text-6xl font-bold text-primary">OnLicit</span>
             </h1>
             <p className="text-xl text-base-content/70 max-w-2xl mx-auto">
-              A modern and secure platform to manage your needs
+              OnLicit digitizes and automates public bidding processes using blockchain, ensuring transparency,
+              security, anonymity in evaluation, and fraud prevention.
             </p>
           </div>
 
@@ -61,8 +62,11 @@ const Home: NextPage = () => {
                 <div className="bg-primary/10 p-4 rounded-2xl mb-4">
                   <ShieldCheckIcon className="h-12 w-12 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">Secure and Reliable</h3>
-                <p className="text-base-content/70">Your information is protected with the best security practices</p>
+                <h3 className="text-xl font-bold mb-3">Anonymous Evaluation</h3>
+                <p className="text-base-content/70">
+                  Homomorphic encryption (Zama) enables proposal analysis without revealing provider identity,
+                  preventing fraud and ensuring confidentiality
+                </p>
               </div>
 
               {/* Feature 2 */}
@@ -70,8 +74,11 @@ const Home: NextPage = () => {
                 <div className="bg-secondary/10 p-4 rounded-2xl mb-4">
                   <CpuChipIcon className="h-12 w-12 text-secondary" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">Modern Technology</h3>
-                <p className="text-base-content/70">Built with the latest and most efficient technologies</p>
+                <h3 className="text-xl font-bold mb-3">Blockchain Transparency</h3>
+                <p className="text-base-content/70">
+                  All transactions, contracts, and payment history are recorded onchain, ensuring real transparency of
+                  government spending
+                </p>
               </div>
 
               {/* Feature 3 */}
@@ -79,8 +86,11 @@ const Home: NextPage = () => {
                 <div className="bg-accent/10 p-4 rounded-2xl mb-4">
                   <SparklesIcon className="h-12 w-12 text-accent" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">Easy to Use</h3>
-                <p className="text-base-content/70">Intuitive and user-friendly interface for a perfect experience</p>
+                <h3 className="text-xl font-bold mb-3">Fair Scoring System</h3>
+                <p className="text-base-content/70">
+                  Automated scoring based on Law 14.133 criteria (price, economic return, innovation) for impartial and
+                  objective evaluation
+                </p>
               </div>
             </div>
 
@@ -88,16 +98,16 @@ const Home: NextPage = () => {
             <div className="bg-base-100 rounded-3xl p-8 shadow-lg">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                 <div>
-                  <div className="text-4xl font-bold text-primary mb-2">10k+</div>
-                  <div className="text-base-content/70">Active Users</div>
+                  <div className="text-4xl font-bold text-primary mb-2">100%</div>
+                  <div className="text-base-content/70">Anonymous</div>
                 </div>
                 <div>
-                  <div className="text-4xl font-bold text-secondary mb-2">99.9%</div>
-                  <div className="text-base-content/70">Uptime</div>
+                  <div className="text-4xl font-bold text-secondary mb-2">Onchain</div>
+                  <div className="text-base-content/70">Transparent</div>
                 </div>
                 <div>
-                  <div className="text-4xl font-bold text-accent mb-2">24/7</div>
-                  <div className="text-base-content/70">Support</div>
+                  <div className="text-4xl font-bold text-accent mb-2">Law 14.133</div>
+                  <div className="text-base-content/70">Compliant</div>
                 </div>
               </div>
             </div>
