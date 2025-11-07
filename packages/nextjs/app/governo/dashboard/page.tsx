@@ -29,11 +29,11 @@ const GovernoHome: NextPage = () => {
             <div className="card-body p-5">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <p className="text-sm text-base-content/60 mb-1">Total de Licitações</p>
+                  <p className="text-sm text-base-content/60 mb-1">Total Bids</p>
                   <p className="text-4xl font-bold text-primary mb-2">12</p>
                   <div className="flex items-center gap-1 text-xs">
                     <span className="text-success">↑ 20%</span>
-                    <span className="text-base-content/60">vs mês anterior</span>
+                    <span className="text-base-content/60">vs last month</span>
                   </div>
                 </div>
                 <div className="bg-primary/20 p-3 rounded-xl">
@@ -48,11 +48,11 @@ const GovernoHome: NextPage = () => {
             <div className="card-body p-5">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <p className="text-sm text-base-content/60 mb-1">Em Andamento</p>
+                  <p className="text-sm text-base-content/60 mb-1">In Progress</p>
                   <p className="text-4xl font-bold text-warning mb-2">5</p>
                   <div className="flex items-center gap-1 text-xs">
                     <ClockIcon className="w-3 h-3" />
-                    <span className="text-base-content/60">Aguardando propostas</span>
+                    <span className="text-base-content/60">Waiting for proposals</span>
                   </div>
                 </div>
                 <div className="bg-warning/20 p-3 rounded-xl">
@@ -67,11 +67,11 @@ const GovernoHome: NextPage = () => {
             <div className="card-body p-5">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <p className="text-sm text-base-content/60 mb-1">Concluídas</p>
+                  <p className="text-sm text-base-content/60 mb-1">Completed</p>
                   <p className="text-4xl font-bold text-success mb-2">7</p>
                   <div className="flex items-center gap-1 text-xs">
                     <CheckCircleIcon className="w-3 h-3" />
-                    <span className="text-base-content/60">Este mês</span>
+                    <span className="text-base-content/60">This month</span>
                   </div>
                 </div>
                 <div className="bg-success/20 p-3 rounded-xl">
@@ -86,11 +86,11 @@ const GovernoHome: NextPage = () => {
             <div className="card-body p-5">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <p className="text-sm text-base-content/60 mb-1">Propostas Recebidas</p>
+                  <p className="text-sm text-base-content/60 mb-1">Proposals Received</p>
                   <p className="text-4xl font-bold text-info mb-2">34</p>
                   <div className="flex items-center gap-1 text-xs">
                     <span className="text-success">↑ 12</span>
-                    <span className="text-base-content/60">esta semana</span>
+                    <span className="text-base-content/60">this week</span>
                   </div>
                 </div>
                 <div className="bg-info/20 p-3 rounded-xl">
@@ -102,7 +102,7 @@ const GovernoHome: NextPage = () => {
         </div>
 
         {/* Ações rápidas melhoradas */}
-        <h2 className="text-2xl font-bold mb-4">Ações Rápidas</h2>
+        <h2 className="text-2xl font-bold mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div
             onClick={() => setIsModalOpen(true)}
@@ -114,12 +114,12 @@ const GovernoHome: NextPage = () => {
                   <PlusIcon className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-lg group-hover:text-primary transition-colors">Nova Licitação</h3>
-                  <p className="text-xs text-base-content/60">Criar processo licitatório</p>
+                  <h3 className="font-bold text-lg group-hover:text-primary transition-colors">New Bid</h3>
+                  <p className="text-xs text-base-content/60">Create bid process</p>
                 </div>
               </div>
               <div className="text-sm text-base-content/70">
-                Registre uma nova licitação na blockchain com total transparência
+                Register a new bid on the blockchain with full transparency
               </div>
             </div>
           </div>
@@ -132,12 +132,12 @@ const GovernoHome: NextPage = () => {
                     <DocumentTextIcon className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-bold text-lg group-hover:text-primary transition-colors">Minhas Licitações</h3>
-                    <p className="text-xs text-base-content/60">Ver e gerenciar</p>
+                    <h3 className="font-bold text-lg group-hover:text-primary transition-colors">My Bids</h3>
+                    <p className="text-xs text-base-content/60">View and manage</p>
                   </div>
                 </div>
                 <div className="text-sm text-base-content/70">
-                  Acesse todas as licitações criadas e acompanhe o status
+                  Access all created bids and track status
                 </div>
               </div>
             </div>
@@ -152,13 +152,13 @@ const GovernoHome: NextPage = () => {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-bold text-lg group-hover:text-primary transition-colors">
-                      Propostas Recebidas
+                      Received Proposals
                     </h3>
-                    <p className="text-xs text-base-content/60">Analisar e comparar</p>
+                    <p className="text-xs text-base-content/60">Analyze and compare</p>
                   </div>
                 </div>
                 <div className="text-sm text-base-content/70">
-                  Analise propostas enviadas e tome decisões informadas
+                  Analyze submitted proposals and make informed decisions
                 </div>
               </div>
             </div>
@@ -168,10 +168,10 @@ const GovernoHome: NextPage = () => {
         {/* Licitações recentes melhoradas */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold">Licitações Recentes</h2>
+            <h2 className="text-2xl font-bold">Recent Bids</h2>
             <Link href="/governo/licitacoes">
               <button className="btn btn-sm btn-ghost gap-2">
-                Ver Todas
+                View All
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -188,23 +188,23 @@ const GovernoHome: NextPage = () => {
           <div className="space-y-3">
             {[
               {
-                nome: "Construção de Ponte Rodoviária",
-                valor: "R$ 15.000.000",
-                propostas: 3,
+                name: "Highway Bridge Construction",
+                value: "R$ 15.000.000",
+                proposals: 3,
                 status: "warning",
                 hash: "0x7f4b...3a2c",
               },
               {
-                nome: "Fornecimento de Equipamentos",
-                valor: "R$ 8.500.000",
-                propostas: 5,
+                name: "Equipment Supply",
+                value: "R$ 8.500.000",
+                proposals: 5,
                 status: "warning",
                 hash: "0x9a1d...7e8f",
               },
               {
-                nome: "Reforma de Escola Municipal",
-                valor: "R$ 2.300.000",
-                propostas: 8,
+                name: "Municipal School Renovation",
+                value: "R$ 2.300.000",
+                proposals: 8,
                 status: "success",
                 hash: "0x3c5e...1b4d",
               },
@@ -218,18 +218,18 @@ const GovernoHome: NextPage = () => {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className={`badge badge-sm badge-${item.status}`}>
-                          {item.status === "warning" ? "Em Andamento" : "Concluída"}
+                          {item.status === "warning" ? "In Progress" : "Completed"}
                         </span>
-                        <h3 className="font-bold">{item.nome}</h3>
+                        <h3 className="font-bold">{item.name}</h3>
                       </div>
                       <div className="flex flex-wrap items-center gap-4 text-sm">
                         <div className="flex items-center gap-1">
                           <CurrencyDollarIcon className="w-4 h-4 text-base-content/60" />
-                          <span className="text-base-content/70">{item.valor}</span>
+                          <span className="text-base-content/70">{item.value}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <DocumentTextIcon className="w-4 h-4 text-base-content/60" />
-                          <span className="text-base-content/70">{item.propostas} propostas</span>
+                          <span className="text-base-content/70">{item.proposals} proposals</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <CubeTransparentIcon className="w-4 h-4 text-primary" />
@@ -240,9 +240,9 @@ const GovernoHome: NextPage = () => {
                     <div className="flex items-center gap-2">
                       <button className="btn btn-sm btn-ghost gap-2">
                         <EyeIcon className="w-4 h-4" />
-                        Ver
+                        View
                       </button>
-                      <button className="btn btn-sm btn-primary">Ver Detalhes</button>
+                      <button className="btn btn-sm btn-primary">View Details</button>
                     </div>
                   </div>
                 </div>
@@ -252,7 +252,7 @@ const GovernoHome: NextPage = () => {
         </div>
       </div>
 
-      {/* Modal de Criar Licitação */}
+      {/* Create Bid Modal */}
       <ModalCriarLicitacao isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );

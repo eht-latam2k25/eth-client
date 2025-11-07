@@ -10,15 +10,15 @@ type ModalCriarLicitacaoProps = {
 
 export const ModalCriarLicitacao = ({ isOpen, onClose }: ModalCriarLicitacaoProps) => {
   const [formData, setFormData] = useState({
-    nome: "",
-    contratante: "",
-    descricao: "",
-    valorInicial: "",
-    dataEncerramento: "",
-    horaEncerramento: "",
-    categoria: "",
-    documentos: "",
-    requisitos: "",
+    name: "",
+    contractingParty: "",
+    description: "",
+    initialValue: "",
+    closingDate: "",
+    closingTime: "",
+    category: "",
+    documents: "",
+    requirements: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -34,13 +34,13 @@ export const ModalCriarLicitacao = ({ isOpen, onClose }: ModalCriarLicitacaoProp
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.nome.trim()) newErrors.nome = "Nome da licitação é obrigatório";
-    if (!formData.contratante.trim()) newErrors.contratante = "Órgão contratante é obrigatório";
-    if (!formData.descricao.trim()) newErrors.descricao = "Descrição é obrigatória";
-    if (!formData.valorInicial) newErrors.valorInicial = "Valor inicial é obrigatório";
-    if (!formData.dataEncerramento) newErrors.dataEncerramento = "Data de encerramento é obrigatória";
-    if (!formData.horaEncerramento) newErrors.horaEncerramento = "Hora de encerramento é obrigatória";
-    if (!formData.categoria) newErrors.categoria = "Categoria é obrigatória";
+    if (!formData.name.trim()) newErrors.name = "Bid name is required";
+    if (!formData.contractingParty.trim()) newErrors.contractingParty = "Contracting party is required";
+    if (!formData.description.trim()) newErrors.description = "Description is required";
+    if (!formData.initialValue) newErrors.initialValue = "Initial value is required";
+    if (!formData.closingDate) newErrors.closingDate = "Closing date is required";
+    if (!formData.closingTime) newErrors.closingTime = "Closing time is required";
+    if (!formData.category) newErrors.category = "Category is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -50,19 +50,19 @@ export const ModalCriarLicitacao = ({ isOpen, onClose }: ModalCriarLicitacaoProp
     e.preventDefault();
 
     if (validateForm()) {
-      console.log("Licitação criada:", formData);
-      alert("Licitação criada com sucesso e registrada na blockchain!");
-      // Limpar formulário
+      console.log("Bid created:", formData);
+      alert("Bid created successfully and registered on the blockchain!");
+      // Clear form
       setFormData({
-        nome: "",
-        contratante: "",
-        descricao: "",
-        valorInicial: "",
-        dataEncerramento: "",
-        horaEncerramento: "",
-        categoria: "",
-        documentos: "",
-        requisitos: "",
+        name: "",
+        contractingParty: "",
+        description: "",
+        initialValue: "",
+        closingDate: "",
+        closingTime: "",
+        category: "",
+        documents: "",
+        requirements: "",
       });
       onClose();
     }
@@ -86,8 +86,8 @@ export const ModalCriarLicitacao = ({ isOpen, onClose }: ModalCriarLicitacaoProp
                   <DocumentTextIcon className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-white">Nova Licitação</h2>
-                  <p className="text-sm text-white/80">Registro em Blockchain</p>
+                  <h2 className="text-2xl font-bold text-white">New Bid</h2>
+                  <p className="text-sm text-white/80">Blockchain Registration</p>
                 </div>
               </div>
               <button onClick={onClose} className="btn btn-sm btn-ghost text-white hover:bg-white/20">
@@ -98,99 +98,99 @@ export const ModalCriarLicitacao = ({ isOpen, onClose }: ModalCriarLicitacaoProp
             {/* Form */}
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
               <div className="space-y-6">
-                {/* Informações Básicas */}
+                {/* Basic Information */}
                 <div className="space-y-4">
                   <h3 className="font-bold text-lg flex items-center gap-2">
                     <DocumentTextIcon className="w-5 h-5 text-primary" />
-                    Informações Básicas
+                    Basic Information
                   </h3>
 
-                  {/* Nome */}
+                  {/* Name */}
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text font-semibold">Nome da Licitação *</span>
+                      <span className="label-text font-semibold">Bid Name *</span>
                     </label>
                     <input
                       type="text"
-                      name="nome"
-                      value={formData.nome}
+                      name="name"
+                      value={formData.name}
                       onChange={handleInputChange}
-                      placeholder="Ex: Construção de Ponte Rodoviária"
-                      className={`input input-bordered w-full ${errors.nome ? "input-error" : ""}`}
+                      placeholder="Ex: Highway Bridge Construction"
+                      className={`input input-bordered w-full ${errors.name ? "input-error" : ""}`}
                     />
-                    {errors.nome && <span className="text-error text-sm mt-1">{errors.nome}</span>}
+                    {errors.name && <span className="text-error text-sm mt-1">{errors.name}</span>}
                   </div>
 
-                  {/* Contratante */}
+                  {/* Contracting Party */}
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text font-semibold">Órgão Contratante *</span>
+                      <span className="label-text font-semibold">Contracting Party *</span>
                     </label>
                     <div className="relative">
                       <BuildingOfficeIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/40" />
                       <input
                         type="text"
-                        name="contratante"
-                        value={formData.contratante}
+                        name="contractingParty"
+                        value={formData.contractingParty}
                         onChange={handleInputChange}
-                        placeholder="Ex: Prefeitura Municipal"
-                        className={`input input-bordered w-full pl-10 ${errors.contratante ? "input-error" : ""}`}
+                        placeholder="Ex: City Hall"
+                        className={`input input-bordered w-full pl-10 ${errors.contractingParty ? "input-error" : ""}`}
                       />
                     </div>
-                    {errors.contratante && <span className="text-error text-sm mt-1">{errors.contratante}</span>}
+                    {errors.contractingParty && <span className="text-error text-sm mt-1">{errors.contractingParty}</span>}
                   </div>
 
-                  {/* Categoria */}
+                  {/* Category */}
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text font-semibold">Categoria *</span>
+                      <span className="label-text font-semibold">Category *</span>
                     </label>
                     <select
-                      name="categoria"
-                      value={formData.categoria}
+                      name="category"
+                      value={formData.category}
                       onChange={handleInputChange}
-                      className={`select select-bordered w-full ${errors.categoria ? "select-error" : ""}`}
+                      className={`select select-bordered w-full ${errors.category ? "select-error" : ""}`}
                     >
-                      <option value="">Selecione uma categoria</option>
-                      <option value="obras">Obras e Construção Civil</option>
-                      <option value="equipamentos">Equipamentos e Materiais</option>
-                      <option value="servicos">Serviços Gerais</option>
-                      <option value="tecnologia">Tecnologia e TI</option>
-                      <option value="saude">Saúde</option>
-                      <option value="educacao">Educação</option>
-                      <option value="transporte">Transporte e Logística</option>
-                      <option value="outros">Outros</option>
+                      <option value="">Select a category</option>
+                      <option value="obras">Works and Civil Construction</option>
+                      <option value="equipamentos">Equipment and Materials</option>
+                      <option value="servicos">General Services</option>
+                      <option value="tecnologia">Technology and IT</option>
+                      <option value="saude">Health</option>
+                      <option value="educacao">Education</option>
+                      <option value="transporte">Transport and Logistics</option>
+                      <option value="outros">Others</option>
                     </select>
-                    {errors.categoria && <span className="text-error text-sm mt-1">{errors.categoria}</span>}
+                    {errors.category && <span className="text-error text-sm mt-1">{errors.category}</span>}
                   </div>
 
-                  {/* Descrição */}
+                  {/* Description */}
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text font-semibold">Descrição *</span>
+                      <span className="label-text font-semibold">Description *</span>
                     </label>
                     <textarea
-                      name="descricao"
-                      value={formData.descricao}
+                      name="description"
+                      value={formData.description}
                       onChange={handleInputChange}
-                      placeholder="Descreva o objeto da licitação..."
-                      className={`textarea textarea-bordered h-24 ${errors.descricao ? "textarea-error" : ""}`}
+                      placeholder="Describe the subject of the bid..."
+                      className={`textarea textarea-bordered h-24 ${errors.description ? "textarea-error" : ""}`}
                     />
-                    {errors.descricao && <span className="text-error text-sm mt-1">{errors.descricao}</span>}
+                    {errors.description && <span className="text-error text-sm mt-1">{errors.description}</span>}
                   </div>
                 </div>
 
-                {/* Valores e Prazos */}
+                {/* Values and Deadlines */}
                 <div className="space-y-4">
                   <h3 className="font-bold text-lg flex items-center gap-2">
                     <CalendarIcon className="w-5 h-5 text-primary" />
-                    Valores e Prazos
+                    Values and Deadlines
                   </h3>
 
-                  {/* Valor */}
+                  {/* Value */}
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text font-semibold">Valor Inicial (R$) *</span>
+                      <span className="label-text font-semibold">Initial Value (R$) *</span>
                     </label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/60">
@@ -198,79 +198,79 @@ export const ModalCriarLicitacao = ({ isOpen, onClose }: ModalCriarLicitacaoProp
                       </span>
                       <input
                         type="number"
-                        name="valorInicial"
-                        value={formData.valorInicial}
+                        name="initialValue"
+                        value={formData.initialValue}
                         onChange={handleInputChange}
                         placeholder="0,00"
                         step="0.01"
                         min="0"
-                        className={`input input-bordered w-full pl-10 ${errors.valorInicial ? "input-error" : ""}`}
+                        className={`input input-bordered w-full pl-10 ${errors.initialValue ? "input-error" : ""}`}
                       />
                     </div>
-                    {errors.valorInicial && <span className="text-error text-sm mt-1">{errors.valorInicial}</span>}
+                    {errors.initialValue && <span className="text-error text-sm mt-1">{errors.initialValue}</span>}
                   </div>
 
-                  {/* Data e Hora */}
+                  {/* Date and Time */}
                   <div className="grid grid-cols-2 gap-4">
                     <div className="form-control">
                       <label className="label">
-                        <span className="label-text font-semibold">Data *</span>
+                        <span className="label-text font-semibold">Date *</span>
                       </label>
                       <input
                         type="date"
-                        name="dataEncerramento"
-                        value={formData.dataEncerramento}
+                        name="closingDate"
+                        value={formData.closingDate}
                         onChange={handleInputChange}
-                        className={`input input-bordered w-full ${errors.dataEncerramento ? "input-error" : ""}`}
+                        className={`input input-bordered w-full ${errors.closingDate ? "input-error" : ""}`}
                       />
-                      {errors.dataEncerramento && (
-                        <span className="text-error text-sm mt-1">{errors.dataEncerramento}</span>
+                      {errors.closingDate && (
+                        <span className="text-error text-sm mt-1">{errors.closingDate}</span>
                       )}
                     </div>
 
                     <div className="form-control">
                       <label className="label">
-                        <span className="label-text font-semibold">Hora *</span>
+                        <span className="label-text font-semibold">Time *</span>
                       </label>
                       <input
                         type="time"
-                        name="horaEncerramento"
-                        value={formData.horaEncerramento}
+                        name="closingTime"
+                        value={formData.closingTime}
                         onChange={handleInputChange}
-                        className={`input input-bordered w-full ${errors.horaEncerramento ? "input-error" : ""}`}
+                        className={`input input-bordered w-full ${errors.closingTime ? "input-error" : ""}`}
                       />
-                      {errors.horaEncerramento && (
-                        <span className="text-error text-sm mt-1">{errors.horaEncerramento}</span>
+                      {errors.closingTime && (
+                        <span className="text-error text-sm mt-1">{errors.closingTime}</span>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* Documentos (Opcional) */}
+                {/* Documents (Optional) */}
                 <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold">Requisitos e Documentos</span>
-                    <span className="label-text-alt text-base-content/60">Opcional</span>
-                  </label>
-                  <textarea
-                    name="requisitos"
-                    value={formData.requisitos}
-                    onChange={handleInputChange}
-                    placeholder="Liste requisitos e documentos necessários..."
+                      <label className="label">
+                        <span className="label-text font-semibold">Requirements and Documents</span>
+                        <span className="label-text-alt text-base-content/60">Optional</span>
+                      </label>
+                      <textarea
+                        name="requirements"
+                        value={formData.requirements}
+                        onChange={handleInputChange}
+                        placeholder="List requirements and necessary documents..."
                     className="textarea textarea-bordered h-20"
                   />
                 </div>
               </div>
 
-              {/* Botões */}
+              {/* Buttons */}
               <div className="flex gap-3 mt-6 pt-6 border-t border-base-300">
                 <button type="button" onClick={onClose} className="btn btn-ghost flex-1">
-                  Cancelar
-                </button>
-                <button type="submit" className="btn btn-primary flex-1 gap-2">
-                  <DocumentTextIcon className="w-5 h-5" />
-                  Criar Licitação
-                </button>
+                Cancel
+              </button>
+              <button type="submit" className="btn btn-primary flex-1 gap-2">
+                <DocumentTextIcon className="w-5 h-5" />
+                Create Bid
+              </button>
               </div>
             </form>
           </div>

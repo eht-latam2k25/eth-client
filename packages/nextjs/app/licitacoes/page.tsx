@@ -12,115 +12,115 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 
-// Tipo de dados para licitação
-type Licitacao = {
+// Bid data type
+type Bid = {
   id: number;
-  nome: string;
-  contratante: string;
-  descricao: string;
-  valorInicial: string;
-  dataEncerramento: string;
-  status: "aberta" | "fechada" | "em-analise";
+  name: string;
+  contractingParty: string;
+  description: string;
+  initialValue: string;
+  closingDate: string;
+  status: "open" | "closed" | "under-review";
 };
 
-// Dados mock de licitações
-const licitacoesMock: Licitacao[] = [
+// Mock bid data
+const bidsMock: Bid[] = [
   {
     id: 1,
-    nome: "Construção de Ponte Rodoviária",
-    contratante: "Prefeitura Municipal de Belo Horizonte",
-    descricao:
-      "Construção de ponte rodoviária sobre o Rio das Velhas, incluindo estudos de impacto ambiental, projeto executivo e execução da obra. A ponte terá extensão de 450 metros e capacidade para tráfego pesado.",
-    valorInicial: "R$ 15.000.000,00",
-    dataEncerramento: "15 de Dezembro de 2024 às 14:00",
-    status: "aberta",
+    name: "Highway Bridge Construction",
+    contractingParty: "City Hall of Belo Horizonte",
+    description:
+      "Construction of a highway bridge over the Velhas River, including environmental impact studies, executive design and construction execution. The bridge will be 450 meters long with capacity for heavy traffic.",
+    initialValue: "R$ 15.000.000,00",
+    closingDate: "December 15, 2024 at 14:00",
+    status: "open",
   },
   {
     id: 2,
-    nome: "Fornecimento de Equipamentos Médicos",
-    contratante: "Hospital das Clínicas",
-    descricao:
-      "Aquisição de equipamentos médicos hospitalares incluindo 5 aparelhos de ressonância magnética, 10 tomógrafos computadorizados e equipamentos de UTI. Inclui instalação, treinamento e garantia de 3 anos.",
-    valorInicial: "R$ 8.500.000,00",
-    dataEncerramento: "22 de Dezembro de 2024 às 16:30",
-    status: "aberta",
+    name: "Medical Equipment Supply",
+    contractingParty: "Hospital das Clínicas",
+    description:
+      "Acquisition of hospital medical equipment including 5 magnetic resonance imaging machines, 10 computed tomography scanners and ICU equipment. Includes installation, training and 3-year warranty.",
+    initialValue: "R$ 8.500.000,00",
+    closingDate: "December 22, 2024 at 16:30",
+    status: "open",
   },
   {
     id: 3,
-    nome: "Reforma de Escola Municipal",
-    contratante: "Secretaria de Educação",
-    descricao:
-      "Reforma completa da Escola Municipal Santos Dumont, incluindo modernização de salas de aula, construção de laboratório de informática, quadra poliesportiva coberta e acessibilidade completa.",
-    valorInicial: "R$ 2.300.000,00",
-    dataEncerramento: "10 de Janeiro de 2025 às 10:00",
-    status: "aberta",
+    name: "Municipal School Renovation",
+    contractingParty: "Education Department",
+    description:
+      "Complete renovation of Santos Dumont Municipal School, including modernization of classrooms, construction of computer lab, covered sports court and full accessibility.",
+    initialValue: "R$ 2.300.000,00",
+    closingDate: "January 10, 2025 at 10:00",
+    status: "open",
   },
   {
     id: 4,
-    nome: "Sistema de Iluminação Pública LED",
-    contratante: "Prefeitura Municipal de São Paulo",
-    descricao:
-      "Substituição de 50.000 pontos de iluminação pública por tecnologia LED em toda cidade, incluindo manutenção preventiva e corretiva pelo período de 5 anos. Sistema com controle remoto e monitoramento.",
-    valorInicial: "R$ 45.000.000,00",
-    dataEncerramento: "28 de Dezembro de 2024 às 11:00",
-    status: "aberta",
+    name: "LED Public Lighting System",
+    contractingParty: "City Hall of São Paulo",
+    description:
+      "Replacement of 50,000 public lighting points with LED technology throughout the city, including preventive and corrective maintenance for 5 years. System with remote control and monitoring.",
+    initialValue: "R$ 45.000.000,00",
+    closingDate: "December 28, 2024 at 11:00",
+    status: "open",
   },
   {
     id: 5,
-    nome: "Pavimentação de Vias Urbanas",
-    contratante: "Prefeitura de Contagem",
-    descricao:
-      "Pavimentação asfáltica de 25km de vias urbanas em diversos bairros da cidade, incluindo drenagem, sinalização horizontal e vertical, e calçadas acessíveis conforme normas vigentes.",
-    valorInicial: "R$ 12.750.000,00",
-    dataEncerramento: "5 de Janeiro de 2025 às 15:00",
-    status: "aberta",
+    name: "Urban Road Paving",
+    contractingParty: "City Hall of Contagem",
+    description:
+      "Asphalt paving of 25km of urban roads in various city neighborhoods, including drainage, horizontal and vertical signage, and accessible sidewalks according to current standards.",
+    initialValue: "R$ 12.750.000,00",
+    closingDate: "January 5, 2025 at 15:00",
+    status: "open",
   },
 ];
 
 const Licitacoes: NextPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState<string>("todas");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = () => {
     setIsRefreshing(true);
-    // Simula um refresh
+    // Simulate a refresh
     setTimeout(() => {
       setIsRefreshing(false);
     }, 1000);
   };
 
-  // Filtrar licitações
-  const licitacoesFiltradas = licitacoesMock.filter(licitacao => {
+  // Filter bids
+  const filteredBids = bidsMock.filter(bid => {
     const matchSearch =
-      licitacao.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      licitacao.contratante.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      licitacao.descricao.toLowerCase().includes(searchTerm.toLowerCase());
+      bid.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      bid.contractingParty.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      bid.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchStatus = filterStatus === "todas" || licitacao.status === filterStatus;
+    const matchStatus = filterStatus === "all" || bid.status === filterStatus;
 
     return matchSearch && matchStatus;
   });
 
   return (
     <div className="min-h-screen bg-base-100">
-      {/* Barra de busca e filtros */}
+      {/* Search bar and filters */}
       <div className="bg-base-100 py-4 px-4 sm:px-6 lg:px-8 border-b border-base-300">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row gap-3">
-            {/* Campo de busca */}
+            {/* Search field */}
             <div className="flex-1 relative">
               <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/40" />
               <input
                 type="text"
-                placeholder="Buscar licitações..."
+                placeholder="Search bids..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className="input input-bordered w-full pl-10"
               />
             </div>
 
-            {/* Filtro por status */}
+            {/* Status filter */}
             <div className="flex items-center gap-2">
               <FunnelIcon className="w-5 h-5 text-base-content/40" />
               <select
@@ -128,102 +128,102 @@ const Licitacoes: NextPage = () => {
                 onChange={e => setFilterStatus(e.target.value)}
                 className="select select-bordered"
               >
-                <option value="todas">Todas</option>
-                <option value="aberta">Abertas</option>
-                <option value="fechada">Fechadas</option>
-                <option value="em-analise">Em Análise</option>
+                <option value="all">All</option>
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+                <option value="under-review">Under Review</option>
               </select>
             </div>
 
-            {/* Botão Refresh */}
+            {/* Refresh button */}
             <button
               onClick={handleRefresh}
               className={`btn btn-primary gap-2 ${isRefreshing ? "loading" : ""}`}
               disabled={isRefreshing}
             >
               <ArrowPathIcon className={`w-5 h-5 ${isRefreshing ? "animate-spin" : ""}`} />
-              Atualizar
+              Refresh
             </button>
           </div>
         </div>
       </div>
 
-      {/* Lista de licitações */}
+      {/* Bids list */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        {/* Contador de resultados */}
+        {/* Results counter */}
         <div className="mb-3">
           <p className="text-sm text-base-content/60">
-            {licitacoesFiltradas.length}{" "}
-            {licitacoesFiltradas.length === 1 ? "licitação encontrada" : "licitações encontradas"}
+            {filteredBids.length}{" "}
+            {filteredBids.length === 1 ? "bid found" : "bids found"}
           </p>
         </div>
 
-        {/* Grid de cards */}
+        {/* Cards grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {licitacoesFiltradas.length > 0 ? (
-            licitacoesFiltradas.map(licitacao => (
+          {filteredBids.length > 0 ? (
+            filteredBids.map(bid => (
               <div
-                key={licitacao.id}
+                key={bid.id}
                 className="card bg-base-100 border-2 border-base-300 hover:border-[#93BBFB] transition-all duration-300 hover:shadow-xl"
               >
                 <div className="card-body p-5">
-                  {/* Header do card */}
+                  {/* Card header */}
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
                     <div className="flex-1">
                       <div className="flex items-start gap-2 mb-2">
                         <div className="badge badge-primary badge-sm mt-1">
-                          {licitacao.status === "aberta"
-                            ? "Aberta"
-                            : licitacao.status === "fechada"
-                              ? "Fechada"
-                              : "Em Análise"}
+                          {bid.status === "open"
+                            ? "Open"
+                            : bid.status === "closed"
+                              ? "Closed"
+                              : "Under Review"}
                         </div>
                         <h2 className="text-lg font-bold text-base-content hover:text-[#93BBFB] transition-colors">
-                          {licitacao.nome}
+                          {bid.name}
                         </h2>
                       </div>
 
                       <div className="flex items-center gap-2 text-sm text-base-content/70">
                         <BuildingOfficeIcon className="w-4 h-4" />
-                        <span className="font-medium">Contratante:</span>
-                        <span className="italic">{licitacao.contratante}</span>
+                        <span className="font-medium">Contracting Party:</span>
+                        <span className="italic">{bid.contractingParty}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Descrição */}
-                  <p className="text-sm text-base-content/80 mb-3 leading-relaxed">{licitacao.descricao}</p>
+                  {/* Description */}
+                  <p className="text-sm text-base-content/80 mb-3 leading-relaxed">{bid.description}</p>
 
-                  {/* Footer do card com informações */}
+                  {/* Card footer with information */}
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-3 border-t border-base-300">
                     <div className="flex flex-col sm:flex-row gap-4">
-                      {/* Valor inicial */}
+                      {/* Initial value */}
                       <div className="flex items-center gap-2">
                         <div className="bg-[#93BBFB]/10 p-2 rounded-lg">
                           <CurrencyDollarIcon className="w-5 h-5 text-[#93BBFB]" />
                         </div>
                         <div>
-                          <p className="text-xs text-base-content/60">Valor Inicial</p>
-                          <p className="font-bold text-base-content">{licitacao.valorInicial}</p>
+                          <p className="text-xs text-base-content/60">Initial Value</p>
+                          <p className="font-bold text-base-content">{bid.initialValue}</p>
                         </div>
                       </div>
 
-                      {/* Data de encerramento */}
+                      {/* Closing date */}
                       <div className="flex items-center gap-2">
                         <div className="bg-[#93BBFB]/10 p-2 rounded-lg">
                           <ClockIcon className="w-5 h-5 text-[#93BBFB]" />
                         </div>
                         <div>
-                          <p className="text-xs text-base-content/60">Encerra em</p>
-                          <p className="font-bold text-base-content">{licitacao.dataEncerramento}</p>
+                          <p className="text-xs text-base-content/60">Closes on</p>
+                          <p className="font-bold text-base-content">{bid.closingDate}</p>
                         </div>
                       </div>
                     </div>
 
-                    {/* Botão de ação */}
-                    <Link href={`/licitacoes/${licitacao.id}`}>
+                    {/* Action button */}
+                    <Link href={`/licitacoes/${bid.id}`}>
                       <button className="btn btn-primary btn-sm gap-2 whitespace-nowrap">
-                        Ver Detalhes
+                        View Details
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -241,12 +241,12 @@ const Licitacoes: NextPage = () => {
               </div>
             ))
           ) : (
-            // Mensagem quando não há resultados
+            // Message when there are no results
             <div className="text-center py-12">
               <div className="bg-base-200 rounded-2xl p-8 max-w-md mx-auto">
                 <MagnifyingGlassIcon className="w-16 h-16 mx-auto text-base-content/30 mb-4" />
-                <h3 className="text-xl font-bold mb-2">Nenhuma licitação encontrada</h3>
-                <p className="text-base-content/60">Tente ajustar os filtros ou termos de busca</p>
+                <h3 className="text-xl font-bold mb-2">No bids found</h3>
+                <p className="text-base-content/60">Try adjusting the filters or search terms</p>
               </div>
             </div>
           )}

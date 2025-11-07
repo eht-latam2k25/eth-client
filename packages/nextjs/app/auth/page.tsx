@@ -42,32 +42,32 @@ const Auth: NextPage = () => {
     let isValid = true;
 
     if (!isLogin && !formData.name.trim()) {
-      newErrors.name = "Nome é obrigatório";
+      newErrors.name = "Name is required";
       isValid = false;
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email é obrigatório";
+      newErrors.email = "Email is required";
       isValid = false;
     } else if (!validateEmail(formData.email)) {
-      newErrors.email = "Email inválido";
+      newErrors.email = "Invalid email";
       isValid = false;
     }
 
     if (!formData.password) {
-      newErrors.password = "Senha é obrigatória";
+      newErrors.password = "Password is required";
       isValid = false;
     } else if (formData.password.length < 6) {
-      newErrors.password = "Senha deve ter pelo menos 6 caracteres";
+      newErrors.password = "Password must be at least 6 characters";
       isValid = false;
     }
 
     if (!isLogin) {
       if (!formData.confirmPassword) {
-        newErrors.confirmPassword = "Confirme sua senha";
+        newErrors.confirmPassword = "Please confirm your password";
         isValid = false;
       } else if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = "As senhas não coincidem";
+        newErrors.confirmPassword = "Passwords do not match";
         isValid = false;
       }
     }
@@ -122,10 +122,10 @@ const Auth: NextPage = () => {
           {/* Header */}
           <div className="bg-primary py-4 px-6 text-center">
             <h1 className="text-xl font-bold text-primary-content mb-1">
-              {isLogin ? "Bem-vindo de volta!" : "Crie sua conta"}
+              {isLogin ? "Welcome back!" : "Create your account"}
             </h1>
             <p className="text-sm text-primary-content/80">
-              {isLogin ? "Faça login para continuar" : "Junte-se a nós hoje"}
+              {isLogin ? "Sign in to continue" : "Join us today"}
             </p>
           </div>
 
@@ -158,9 +158,9 @@ const Auth: NextPage = () => {
             {/* Name Field (only for signup) */}
             {!isLogin && (
               <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-2">
-                  Nome Completo
-                </label>
+                  <label htmlFor="name" className="block text-sm font-medium mb-2">
+                    Full Name
+                  </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <UserIcon className="h-5 w-5 text-base-content/40" />
@@ -204,7 +204,7 @@ const Auth: NextPage = () => {
             {/* Password Field */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium mb-2">
-                Senha
+                Password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -227,7 +227,7 @@ const Auth: NextPage = () => {
             {!isLogin && (
               <div>
                 <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2">
-                  Confirmar Senha
+                  Confirm Password
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -253,7 +253,7 @@ const Auth: NextPage = () => {
                 <div className="flex items-center"></div>
                 <div className="text-sm">
                   <a href="#" className="link link-primary">
-                    Esqueceu a senha?
+                    Forgot password?
                   </a>
                 </div>
               </div>
@@ -261,15 +261,15 @@ const Auth: NextPage = () => {
 
             {/* Submit Button */}
             <button type="submit" className="btn btn-primary w-full">
-              {isLogin ? "Entrar" : "Criar Conta"}
+              {isLogin ? "Sign In" : "Create Account"}
             </button>
 
             {/* Alternative Action */}
             <div className="text-center">
               <p className="text-sm text-base-content/60">
-                {isLogin ? "Não tem uma conta?" : "Já tem uma conta?"}{" "}
+                {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
                 <button type="button" onClick={toggleMode} className="link link-primary font-semibold">
-                  {isLogin ? "Cadastre-se" : "Faça login"}
+                  {isLogin ? "Sign up" : "Sign in"}
                 </button>
               </p>
             </div>
@@ -278,20 +278,20 @@ const Auth: NextPage = () => {
           {/* Footer */}
           <div className="bg-base-200 px-6 py-3 text-center">
             <Link href="/" className="link link-primary text-xs">
-              ← Voltar para Home
+              ← Back to Home
             </Link>
           </div>
         </div>
 
         {/* Terms */}
         <p className="text-center text-xs text-base-content/60 mt-3">
-          Ao continuar, você concorda com nossos{" "}
+          By continuing, you agree to our{" "}
           <a href="#" className="link">
-            Termos de Serviço
+            Terms of Service
           </a>{" "}
-          e{" "}
+          and{" "}
           <a href="#" className="link">
-            Política de Privacidade
+            Privacy Policy
           </a>
         </p>
       </div>
