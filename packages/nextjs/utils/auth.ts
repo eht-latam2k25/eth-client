@@ -85,20 +85,50 @@ export const logout = () => {
 };
 
 /**
- * Decodifica um JWT (mock - substitua com biblioteca real)
- * TODO: Use jwt-decode ou outra biblioteca para decodificar JWT real
+ * Decodifica um JWT e extrai informações do usuário
  */
-export const decodeToken = (token: string): { userType: UserType; email: string } | null => {
+export const decodeToken = (
+  token: string,
+): {
+  userId: string;
+  username: string;
+  walletAddress: string;
+  universalAddress: string;
+  accessLevel: number;
+  userType: UserType;
+} | null => {
   try {
-    // MOCK: Em produção, use jwt-decode
-    // const decoded = jwtDecode(token);
-    // return decoded;
+    // Decodifica JWT manualmente (parte do payload está entre os pontos)
+    const parts = token.split(".");
+    if (parts.length !== 3) {
+      throw new Error("Invalid token format");
+    }
 
-    // Por enquanto, retorna mock (token será usado quando implementar jwt-decode)
-    console.log("Token recebido:", token);
+    // Decodifica a parte do payload (base64url)
+    const payload = parts[1];
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join(""),
+    );
+
+    const decoded = JSON.parse(jsonPayload);
+    console.log("📊 Token decodificado:", decoded);
+
+    // Converte accessLevel para userType
+    // accessLevel 1 = participante (usuário normal)
+    // accessLevel 2 = governo (empresa)
+    const userType: UserType = decoded.accessLevel === 2 ? "governo" : "participante";
+
     return {
-      userType: "participante",
-      email: "user@example.com",
+      userId: decoded.userId,
+      username: decoded.username,
+      walletAddress: decoded.walletAddress,
+      universalAddress: decoded.universalAddress,
+      accessLevel: decoded.accessLevel,
+      userType,
     };
   } catch (error) {
     console.error("Erro ao decodificar token:", error);

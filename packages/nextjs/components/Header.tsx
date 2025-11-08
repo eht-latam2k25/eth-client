@@ -14,7 +14,7 @@ type HeaderMenuLink = {
   icon?: React.ReactNode;
 };
 
-export const menuLinks: HeaderMenuLink[] = [
+const menuLinks: HeaderMenuLink[] = [
   {
     label: "Home",
     href: "/",
@@ -24,34 +24,6 @@ export const menuLinks: HeaderMenuLink[] = [
     href: "/licitacoes",
   },
 ];
-
-export const HeaderMenuLinks = () => {
-  const pathname = usePathname();
-
-  return (
-    <>
-      {menuLinks.map(({ label, href, icon }) => {
-        const isActive = pathname === href;
-        return (
-          <li key={href}>
-            <Link
-              href={href}
-              passHref
-              className={`${
-                isActive
-                  ? "bg-primary text-primary-content shadow-md font-semibold"
-                  : "text-base-content hover:text-primary"
-              } hover:bg-primary/10 focus:!bg-primary focus:!text-primary-content active:!bg-primary active:!text-primary-content py-1.5 px-3 text-sm rounded-full gap-2 grid grid-flow-col transition-all`}
-            >
-              {icon}
-              <span>{label}</span>
-            </Link>
-          </li>
-        );
-      })}
-    </>
-  );
-};
 
 /**
  * Truncate wallet address to show first 6 and last 4 characters
@@ -65,6 +37,7 @@ const truncateAddress = (address: string) => {
  * Site header
  */
 export const Header = () => {
+  const pathname = usePathname();
   const burgerMenuRef = useRef<HTMLDetailsElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string>("");
@@ -98,108 +71,156 @@ export const Header = () => {
   }, []);
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 shrink-0 justify-between z-20 shadow-md px-0 sm:px-2 border-b border-base-300 py-0 !py-0">
-      <div className="navbar-start w-auto lg:w-1/2">
-        <Link href="/" passHref className="lg:hidden flex items-center gap-0 ml-1 shrink-0 !py-0">
-          <div className="flex relative w-48 h-16 -my-1">
-            <Image alt="OnLicit logo" className="cursor-pointer object-contain" fill src="/OnLicit.png" />
+    <header className="sticky top-0 z-50 w-full border-b border-base-300 bg-base-100/95 backdrop-blur supports-[backdrop-filter]:bg-base-100/80">
+      <div className="container mx-auto flex h-14 items-center justify-between px-4">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <div className="relative w-32 h-8">
+            <Image alt="OnLicit" className="object-contain" fill src="/OnLicit.png" priority />
           </div>
         </Link>
-        <details className="dropdown" ref={burgerMenuRef}>
-          <summary className="ml-1 btn btn-ghost lg:hidden hover:bg-transparent">
-            <Bars3Icon className="h-1/2" />
-          </summary>
-          <ul
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow-sm bg-base-100 rounded-box w-52"
-            onClick={() => {
-              burgerMenuRef?.current?.removeAttribute("open");
-            }}
-          >
-            <HeaderMenuLinks />
-            {isLoggedIn ? (
-              <>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-1">
+          {menuLinks.map(({ label, href }) => {
+            const isActive = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  isActive
+                    ? "bg-primary text-primary-content"
+                    : "text-base-content/70 hover:text-base-content hover:bg-base-200"
+                }`}
+              >
+                {label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Right side - User menu */}
+        <div className="flex items-center gap-2">
+          {isLoggedIn ? (
+            <div className="dropdown dropdown-end">
+              <label tabIndex={0} className="btn btn-ghost btn-sm gap-2 hover:bg-base-200 normal-case font-normal">
+                <UserCircleIcon className="h-5 w-5" />
+                <span className="hidden sm:inline text-xs font-mono">{truncateAddress(walletAddress)}</span>
+              </label>
+              <ul
+                tabIndex={0}
+                className="dropdown-content menu p-2 shadow-xl bg-base-100 rounded-lg w-56 mt-2 border border-base-300"
+              >
+                <li className="menu-title px-3 py-2">
+                  <span className="text-xs font-semibold text-base-content/60">Wallet</span>
+                </li>
+                <li>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(walletAddress);
+                      alert("Address copied!");
+                    }}
+                    className="text-xs font-mono justify-between hover:bg-base-200"
+                  >
+                    <span>{truncateAddress(walletAddress)}</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"
+                      />
+                    </svg>
+                  </button>
+                </li>
+                <div className="divider my-0"></div>
                 <li>
                   <Link
                     href={userType === "governo" ? "/governo/dashboard" : "/participante/dashboard"}
-                    className="gap-2"
+                    className="hover:bg-base-200"
                   >
                     <UserCircleIcon className="h-4 w-4" />
-                    <span>Dashboard</span>
+                    Dashboard
                   </Link>
                 </li>
                 <li>
-                  <button onClick={logout} className="gap-2">
-                    <span>Logout</span>
+                  <button onClick={logout} className="text-error hover:bg-error/10">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-4 h-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                      />
+                    </svg>
+                    Logout
                   </button>
                 </li>
-              </>
-            ) : (
-              <li>
-                <Link href="/auth" className="gap-2">
-                  <UserCircleIcon className="h-4 w-4" />
-                  <span>Login</span>
-                </Link>
-              </li>
-            )}
-          </ul>
-        </details>
-        <Link href="/" passHref className="hidden lg:flex items-center gap-0 ml-2 mr-3 shrink-0 !py-0">
-          <div className="flex relative w-64 h-24 -my-1">
-            <Image alt="OnLicit logo" className="cursor-pointer object-contain" fill src="/OnLicit.png" />
-          </div>
-        </Link>
-        <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
-          <HeaderMenuLinks />
-        </ul>
-      </div>
-      <div className="navbar-end grow mr-4">
-        {isLoggedIn ? (
-          <div className="dropdown dropdown-end">
-            <label tabIndex={0} className="btn btn-primary btn-sm gap-2 cursor-pointer">
-              <UserCircleIcon className="h-5 w-5" />
-              <span className="hidden sm:inline">{truncateAddress(walletAddress)}</span>
-            </label>
+              </ul>
+            </div>
+          ) : (
+            <Link href="/auth">
+              <button className="btn btn-primary btn-sm gap-2 normal-case">
+                <UserCircleIcon className="h-4 w-4" />
+                <span className="hidden sm:inline">Sign In</span>
+              </button>
+            </Link>
+          )}
+
+          {/* Mobile menu */}
+          <details className="dropdown dropdown-end md:hidden" ref={burgerMenuRef}>
+            <summary className="btn btn-ghost btn-sm btn-square">
+              <Bars3Icon className="h-5 w-5" />
+            </summary>
             <ul
-              tabIndex={0}
-              className="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-52 mt-2 border border-base-300"
+              className="dropdown-content menu p-2 shadow-xl bg-base-100 rounded-lg w-52 mt-2 border border-base-300"
+              onClick={() => {
+                burgerMenuRef?.current?.removeAttribute("open");
+              }}
             >
-              <li className="menu-title">
-                <span className="text-xs">Wallet Address</span>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(walletAddress);
-                    alert("Address copied!");
-                  }}
-                  className="text-xs font-mono"
-                >
-                  {truncateAddress(walletAddress)}
-                </button>
-              </li>
-              <div className="divider my-1"></div>
-              <li>
-                <Link href={userType === "governo" ? "/governo/dashboard" : "/participante/dashboard"}>
-                  <UserCircleIcon className="h-4 w-4" />
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <button onClick={logout} className="text-error">
-                  Logout
-                </button>
-              </li>
+              {menuLinks.map(({ label, href }) => (
+                <li key={href}>
+                  <Link href={href} className="hover:bg-base-200">
+                    {label}
+                  </Link>
+                </li>
+              ))}
+              {isLoggedIn && (
+                <>
+                  <div className="divider my-0"></div>
+                  <li>
+                    <Link
+                      href={userType === "governo" ? "/governo/dashboard" : "/participante/dashboard"}
+                      className="hover:bg-base-200"
+                    >
+                      <UserCircleIcon className="h-4 w-4" />
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li>
+                    <button onClick={logout} className="text-error hover:bg-error/10">
+                      Logout
+                    </button>
+                  </li>
+                </>
+              )}
             </ul>
-          </div>
-        ) : (
-          <Link href="/auth">
-            <button className="btn btn-primary btn-sm gap-2">
-              <UserCircleIcon className="h-5 w-5" />
-              <span className="hidden sm:inline">Sign In</span>
-            </button>
-          </Link>
-        )}
+          </details>
+        </div>
       </div>
-    </div>
+    </header>
   );
 };

@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { NextPage } from "next";
 import { LockClosedIcon, UserIcon } from "@heroicons/react/24/outline";
 import { getBaseProvider } from "~~/services/base/baseAccountSDK";
-import { type UserType, setAuthToken, setUserType } from "~~/utils/auth";
+import { type UserType, decodeToken, setAuthToken, setUserType } from "~~/utils/auth";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
 
@@ -119,24 +119,40 @@ const Auth: NextPage = () => {
           if (loginData.token) {
             setAuthToken(loginData.token);
             localStorage.setItem("token", loginData.token);
+
+            // Decodificar token para obter accessLevel
+            const decodedToken = decodeToken(loginData.token);
+            if (decodedToken) {
+              console.log("🔓 Token decodificado:");
+              console.log("  • User ID:", decodedToken.userId);
+              console.log("  • Username:", decodedToken.username);
+              console.log("  • Access Level:", decodedToken.accessLevel);
+              console.log("  • User Type:", decodedToken.userType);
+
+              // Salvar tipo de usuário baseado no accessLevel
+              setUserType(decodedToken.userType);
+
+              // Salvar wallet addresses do token
+              if (decodedToken.walletAddress) {
+                localStorage.setItem("subAccount", JSON.stringify({ address: decodedToken.walletAddress }));
+              }
+              if (decodedToken.universalAddress) {
+                localStorage.setItem("universalAddress", decodedToken.universalAddress);
+              }
+            }
           }
 
-          // Salvar dados do usuário
+          // Salvar dados do usuário (do response body)
           if (loginData.user) {
             localStorage.setItem("user", JSON.stringify(loginData.user));
-            if (loginData.user.walletAddress) {
-              localStorage.setItem("subAccount", JSON.stringify({ address: loginData.user.walletAddress }));
-            }
-            if (loginData.user.universalAddress) {
-              localStorage.setItem("universalAddress", loginData.user.universalAddress);
-            }
           }
 
-          // Determinar tipo de usuário
-          const userType: UserType = formData.username.toLowerCase().startsWith("gov") ? "governo" : "participante";
-          setUserType(userType);
+          // Obter tipo de usuário do token decodificado
+          const decodedToken = loginData.token ? decodeToken(loginData.token) : null;
+          const userType = decodedToken?.userType || "participante";
 
           console.log("🎯 Tipo de usuário:", userType);
+          console.log("🎯 Access Level:", decodedToken?.accessLevel);
           console.log("🚀 Redirecionando...");
 
           window.location.href = userType === "governo" ? "/governo/dashboard" : "/participante/dashboard";
@@ -262,24 +278,32 @@ const Auth: NextPage = () => {
 
           console.log("✅ Registro backend concluído:", registerData);
 
+          let userType: UserType = "participante";
+
           if (registerData?.token) {
             localStorage.setItem("token", registerData.token);
+            setAuthToken(registerData.token);
+
+            // Decodificar token para obter accessLevel
+            const decodedToken = decodeToken(registerData.token);
+            if (decodedToken) {
+              console.log("🔓 Token decodificado após registro:");
+              console.log("  • User ID:", decodedToken.userId);
+              console.log("  • Username:", decodedToken.username);
+              console.log("  • Access Level:", decodedToken.accessLevel);
+              console.log("  • User Type:", decodedToken.userType);
+
+              userType = decodedToken.userType;
+            }
           }
 
-          const backendUserType = registerData?.userType as UserType | undefined;
-          const derivedUserType: UserType = backendUserType
-            ? backendUserType
-            : formData.username.toLowerCase().startsWith("gov")
-              ? "governo"
-              : "participante";
-
-          setUserType(derivedUserType);
+          setUserType(userType);
 
           alert(
-            `Conta criada com sucesso!\n\nSub Account: ${subAccountAddress}\n\nVerifique o console para mais detalhes.`,
+            `Conta criada com sucesso!\n\nSub Account: ${subAccountAddress}\nUser Type: ${userType}\n\nVerifique o console para mais detalhes.`,
           );
 
-          window.location.href = derivedUserType === "governo" ? "/governo/dashboard" : "/participante/dashboard";
+          window.location.href = userType === "governo" ? "/governo/dashboard" : "/participante/dashboard";
         } catch (error) {
           console.error("═══════════════════════════════════════");
           console.error("❌ ERRO ao criar conta e Sub Account:");
