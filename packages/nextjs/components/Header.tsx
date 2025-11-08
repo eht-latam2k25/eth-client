@@ -37,8 +37,10 @@ export const HeaderMenuLinks = () => {
               href={href}
               passHref
               className={`${
-                isActive ? "bg-secondary shadow-md" : ""
-              } hover:bg-secondary hover:shadow-md focus:!bg-secondary active:!text-neutral py-1.5 px-3 text-sm rounded-full gap-2 grid grid-flow-col`}
+                isActive
+                  ? "bg-primary text-primary-content shadow-md font-semibold"
+                  : "text-base-content hover:text-primary"
+              } hover:bg-primary/10 focus:!bg-primary focus:!text-primary-content active:!bg-primary active:!text-primary-content py-1.5 px-3 text-sm rounded-full gap-2 grid grid-flow-col transition-all`}
             >
               {icon}
               <span>{label}</span>
@@ -95,11 +97,12 @@ export const Header = () => {
           <HeaderMenuLinks />
         </ul>
       </div>
-      <div className="navbar-end grow mr-4">
+      <div className="navbar-end pr-4 lg:pr-8">
         <Link href="/auth">
-          <button className="btn btn-primary btn-sm gap-2">
+          <button className="btn btn-primary gap-2 px-4 py-2 h-10 min-h-10 rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 font-medium">
             <UserCircleIcon className="h-5 w-5" />
             <span className="hidden sm:inline">Sign In</span>
+            <span className="sm:hidden">Login</span>
           </button>
         </Link>
       </div>
