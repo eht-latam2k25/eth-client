@@ -9,21 +9,16 @@ import {
   CheckCircleIcon,
   CurrencyDollarIcon,
   DocumentTextIcon,
-  EyeIcon,
   TrophyIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 
 type Proposal = {
   id: number;
-  company: string;
-  cnpj: string;
-  value: string;
-  deadline: string;
-  sentDate: string;
-  score: number;
+  proposalHash: string; // Hash único da proposta (zero-knowledge)
+  score: number; // Pontuação calculada pelo backend
+  submittedAt: string;
   status: "pending" | "approved" | "rejected";
-  documents: number;
 };
 
 type Bid = {
@@ -45,36 +40,24 @@ const bidsWithProposals: Bid[] = [
     proposals: [
       {
         id: 1,
-        company: "Construtora ABC Ltda",
-        cnpj: "12.345.678/0001-90",
-        value: "R$ 14.200.000,00",
-        deadline: "18 months",
-        sentDate: "10/12/2024 14:30",
+        proposalHash: "0x7a8f3c2e1b9d4a6f5e8c2b1a9d7f3e2c1b8a6f4e2d1c9b7a5f3e1d9c7b5a3f1e",
         score: 95,
+        submittedAt: "10/12/2024 14:30",
         status: "pending",
-        documents: 12,
       },
       {
         id: 2,
-        company: "Engenharia XYZ S.A.",
-        cnpj: "98.765.432/0001-10",
-        value: "R$ 14.800.000,00",
-        deadline: "16 months",
-        sentDate: "09/12/2024 10:15",
+        proposalHash: "0x2b9f4e1c8a7d3f6e2b1c9a8f7e3d2c1b9a7f6e4d3c2b1a9f8e7d6c5b4a3f2e1d",
         score: 88,
+        submittedAt: "09/12/2024 10:15",
         status: "pending",
-        documents: 10,
       },
       {
         id: 3,
-        company: "Obras Prime Construções",
-        cnpj: "11.222.333/0001-44",
-        value: "R$ 13.900.000,00",
-        deadline: "20 months",
-        sentDate: "11/12/2024 16:45",
+        proposalHash: "0x5d3a1f9c7b2e8d4a6f1c9b7e5d3a2f1c9b8e7d6a5f4e3d2c1b9a8f7e6d5c4b3a",
         score: 92,
+        submittedAt: "11/12/2024 16:45",
         status: "pending",
-        documents: 11,
       },
     ],
   },
@@ -87,25 +70,17 @@ const bidsWithProposals: Bid[] = [
     proposals: [
       {
         id: 4,
-        company: "MedEquip Tecnologia",
-        cnpj: "55.666.777/0001-88",
-        value: "R$ 8.200.000,00",
-        deadline: "6 months",
-        sentDate: "18/12/2024 09:20",
+        proposalHash: "0x9e7f5d3c1b8a6f4e2d9c7b5a3f1e9d7c5b3a1f9e8d7c6b5a4f3e2d1c9b8a7f6e",
         score: 90,
+        submittedAt: "18/12/2024 09:20",
         status: "pending",
-        documents: 8,
       },
       {
         id: 5,
-        company: "HealthTech Soluções",
-        cnpj: "44.555.666/0001-99",
-        value: "R$ 8.100.000,00",
-        deadline: "8 months",
-        sentDate: "17/12/2024 15:30",
+        proposalHash: "0x4c2a9f7e5d3b1c8a6f4e2d9c7b5a3f1e9d8c7b6a5f4e3d2c1b9a8f7e6d5c4b3a",
         score: 85,
+        submittedAt: "17/12/2024 15:30",
         status: "pending",
-        documents: 7,
       },
     ],
   },
@@ -246,10 +221,10 @@ const GovernoPropostas: NextPage = () => {
                         <div className="card-body p-4">
                           {/* Proposal Header */}
                           <div className="flex items-start justify-between mb-3">
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-3 flex-1">
                               {/* Ranking Position */}
                               <div
-                                className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${
+                                className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shrink-0 ${
                                   index === 0
                                     ? "bg-warning text-warning-content"
                                     : index === 1
@@ -259,46 +234,64 @@ const GovernoPropostas: NextPage = () => {
                               >
                                 {index + 1}º
                               </div>
-                              <div>
-                                <h3 className="font-bold">{proposal.company}</h3>
-                                <p className="text-xs text-base-content/60 font-mono">{proposal.cnpj}</p>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className="text-xs text-base-content/60 font-semibold">Proposal Hash</span>
+                                  {index === 0 && <TrophyIcon className="w-4 h-4 text-warning" />}
+                                </div>
+                                <p className="text-xs font-mono text-base-content/80 truncate">
+                                  {proposal.proposalHash}
+                                </p>
+                                <button
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(proposal.proposalHash);
+                                    alert("Hash copied!");
+                                  }}
+                                  className="text-xs text-primary hover:underline mt-1"
+                                >
+                                  Copy hash
+                                </button>
                               </div>
                             </div>
 
                             {/* Score */}
-                            <div className="text-right">
-                              <div className="text-2xl font-bold text-primary">{proposal.score}</div>
-                              <div className="text-xs text-base-content/60">points</div>
+                            <div className="text-right shrink-0">
+                              <div className="text-3xl font-bold text-primary">{proposal.score}</div>
+                              <div className="text-xs text-base-content/60 font-semibold">POINTS</div>
                             </div>
                           </div>
 
-                          {/* Proposal Details */}
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-                            <div>
-                              <div className="text-xs text-base-content/60 mb-1">Proposed Value</div>
-                              <div className="font-bold text-sm">{proposal.value}</div>
+                          {/* Proposal Info */}
+                          <div className="bg-base-200/50 p-3 rounded-lg mb-3">
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-base-content/60">Submitted at:</span>
+                              <span className="font-mono font-semibold">{proposal.submittedAt}</span>
                             </div>
-                            <div>
-                              <div className="text-xs text-base-content/60 mb-1">Deadline</div>
-                              <div className="font-bold text-sm">{proposal.deadline}</div>
-                            </div>
-                            <div>
-                              <div className="text-xs text-base-content/60 mb-1">Send Date</div>
-                              <div className="font-bold text-sm">{proposal.sentDate}</div>
-                            </div>
-                            <div>
-                              <div className="text-xs text-base-content/60 mb-1">Documents</div>
-                              <div className="font-bold text-sm">{proposal.documents} attachments</div>
-                            </div>
+                          </div>
+
+                          {/* Zero-Knowledge Notice */}
+                          <div className="alert alert-info py-2 mb-3">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              className="stroke-current shrink-0 w-5 h-5"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                              ></path>
+                            </svg>
+                            <span className="text-xs">
+                              Competitor details are hidden (zero-knowledge). Score calculated by backend.
+                            </span>
                           </div>
 
                           {/* Actions */}
                           <div className="flex gap-2">
-                            <button className="btn btn-sm btn-outline flex-1 gap-2">
-                              <EyeIcon className="w-4 h-4" />
-                              View Details
-                            </button>
-                            <button className="btn btn-sm btn-success gap-2">
+                            <button className="btn btn-sm btn-success flex-1 gap-2">
                               <CheckCircleIcon className="w-4 h-4" />
                               Approve
                             </button>
@@ -310,9 +303,9 @@ const GovernoPropostas: NextPage = () => {
 
                           {/* Highlight badge for 1st place */}
                           {index === 0 && (
-                            <div className="mt-2 flex items-center gap-2 text-warning">
-                              <TrophyIcon className="w-4 h-4" />
-                              <span className="text-xs font-semibold">Best Proposal</span>
+                            <div className="mt-3 flex items-center justify-center gap-2 text-warning bg-warning/10 py-2 rounded-lg">
+                              <TrophyIcon className="w-5 h-5" />
+                              <span className="text-sm font-bold">HIGHEST SCORE - RECOMMENDED</span>
                             </div>
                           )}
                         </div>
