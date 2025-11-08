@@ -256,8 +256,8 @@ const Auth: NextPage = () => {
                 Username
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <UserIcon className="h-5 w-5 text-base-content/40" />
+                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none z-20">
+                  <UserIcon className="h-5 w-5 text-gray-500" />
                 </div>
                 <input
                   id="username"
@@ -265,14 +265,11 @@ const Auth: NextPage = () => {
                   type="text"
                   value={formData.username}
                   onChange={handleInputChange}
-                  className={`input input-bordered w-full pl-10 ${errors.username ? "input-error" : ""}`}
+                  className={`input input-bordered w-full pl-11 relative z-0 ${errors.username ? "input-error" : ""}`}
                   placeholder={isLogin ? "Enter your username" : "Choose a username"}
                 />
               </div>
               {errors.username && <p className="text-error text-sm mt-1">{errors.username}</p>}
-              {!isLogin && (
-                <p className="text-xs text-base-content/60 mt-1">Tip: Use &quot;gov...&quot; for government accounts</p>
-              )}
             </div>
 
             {/* Password Field */}
@@ -281,8 +278,8 @@ const Auth: NextPage = () => {
                 Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <LockClosedIcon className="h-5 w-5 text-base-content/40" />
+                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none z-20">
+                  <LockClosedIcon className="h-5 w-5 text-gray-500" />
                 </div>
                 <input
                   id="password"
@@ -290,7 +287,7 @@ const Auth: NextPage = () => {
                   type="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`input input-bordered w-full pl-10 ${errors.password ? "input-error" : ""}`}
+                  className={`input input-bordered w-full pl-11 relative z-0 ${errors.password ? "input-error" : ""}`}
                   placeholder="••••••••"
                 />
               </div>
@@ -304,8 +301,8 @@ const Auth: NextPage = () => {
                   Confirm Password
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <LockClosedIcon className="h-5 w-5 text-base-content/40" />
+                  <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none z-20">
+                    <LockClosedIcon className="h-5 w-5 text-gray-500" />
                   </div>
                   <input
                     id="confirmPassword"
@@ -313,7 +310,7 @@ const Auth: NextPage = () => {
                     type="password"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className={`input input-bordered w-full pl-10 ${errors.confirmPassword ? "input-error" : ""}`}
+                    className={`input input-bordered w-full pl-11 relative z-0 ${errors.confirmPassword ? "input-error" : ""}`}
                     placeholder="••••••••"
                   />
                 </div>
@@ -350,9 +347,13 @@ const Auth: NextPage = () => {
           </form>
 
           {/* Footer */}
-          <div className="bg-base-200 px-6 py-3 text-center">
-            <Link href="/" className="link link-primary text-xs">
-              ← Back to Home
+          <div className="bg-base-200 px-6 py-4 text-center border-t border-base-300">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-base font-semibold text-base-content/80 hover:text-base-content transition-all duration-200 hover:gap-3"
+            >
+              <span className="text-lg">←</span>
+              <span>Back to Home</span>
             </Link>
           </div>
         </div>

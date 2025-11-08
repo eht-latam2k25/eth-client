@@ -31,12 +31,6 @@ const initializeSDK = () => {
     appName: "Licitações Blockchain",
     appLogoUrl: `${window.location.origin}/logo.svg`,
     appChainIds: [baseSepolia.id],
-    subAccounts: {
-      // Criar automaticamente ao conectar
-      creation: "on-connect" as const,
-      // Usar sub account como padrão
-      defaultAccount: "sub" as const,
-    },
   });
 
   console.log("✅ BASE Account SDK inicializado!");
