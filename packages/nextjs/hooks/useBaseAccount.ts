@@ -3,7 +3,21 @@
  * Fornece funções para conectar, criar e gerenciar sub accounts
  */
 import { useCallback, useEffect, useState } from "react";
-import { type SubAccount, baseProvider } from "~~/services/base/baseAccountSDK";
+import { type SubAccount, getBaseProvider } from "~~/services/base/baseAccountSDK";
+
+const normalizeHexAddress = (value: unknown, context: string): string => {
+  if (typeof value !== "string") {
+    throw new Error(`${context} must be a hexadecimal string that starts with 0x. Received: ${String(value)}`);
+  }
+
+  const trimmed = value.trim();
+
+  if (!trimmed.startsWith("0x")) {
+    throw new Error(`${context} must start with 0x. Received: ${trimmed}`);
+  }
+
+  return trimmed.toLowerCase();
+};
 
 export const useBaseAccount = () => {
   const [universalAddress, setUniversalAddress] = useState<string | null>(null);
@@ -20,28 +34,29 @@ export const useBaseAccount = () => {
       setIsLoading(true);
       setError(null);
 
+      const provider = getBaseProvider();
       console.log("🔄 Conectando Universal Account...");
 
       // Solicita acesso às contas
-      const response = await baseProvider.request({
+      const response = await provider.request({
         method: "eth_requestAccounts",
         params: [],
       });
 
       const accounts = response as string[];
-      const address = accounts[0];
-      setUniversalAddress(address);
+      const normalizedAddress = normalizeHexAddress(accounts[0], "Universal account address");
+      setUniversalAddress(normalizedAddress);
       setIsConnected(true);
 
       console.log("✅ Universal Account conectada!");
-      console.log("📍 Endereço:", address);
+      console.log("📍 Endereço:", normalizedAddress);
 
       // Salva no localStorage
       if (typeof window !== "undefined") {
-        localStorage.setItem("universalAddress", address);
+        localStorage.setItem("universalAddress", normalizedAddress);
       }
 
-      return address;
+      return normalizedAddress;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Erro ao conectar conta";
       setError(errorMessage);
@@ -60,7 +75,8 @@ export const useBaseAccount = () => {
       setIsLoading(true);
       setError(null);
 
-      const result = (await baseProvider.request({
+      const provider = getBaseProvider();
+      const result = (await provider.request({
         method: "wallet_getSubAccounts",
         params: [
           {
@@ -73,18 +89,24 @@ export const useBaseAccount = () => {
       const existing = result.subAccounts[0];
 
       if (existing) {
-        setSubAccount(existing);
+        const normalizedAddress = normalizeHexAddress(existing.address, "Sub account address");
+        const normalizedSubAccount: SubAccount = {
+          ...existing,
+          address: normalizedAddress,
+        };
+
+        setSubAccount(normalizedSubAccount);
 
         // Log quando sub account existe
-        console.log("✅ Sub Account encontrada:", existing);
-        console.log("📍 Endereço da Sub Account:", existing.address);
+        console.log("✅ Sub Account encontrada:", normalizedSubAccount);
+        console.log("📍 Endereço da Sub Account:", normalizedAddress);
 
         // Salva no localStorage
         if (typeof window !== "undefined") {
-          localStorage.setItem("subAccount", JSON.stringify(existing));
+          localStorage.setItem("subAccount", JSON.stringify(normalizedSubAccount));
         }
 
-        return existing;
+        return normalizedSubAccount;
       }
 
       console.log("ℹ️ Nenhuma Sub Account encontrada. Será criada uma nova.");
@@ -107,9 +129,10 @@ export const useBaseAccount = () => {
       setIsLoading(true);
       setError(null);
 
+      const provider = getBaseProvider();
       console.log("🔄 Criando nova Sub Account...");
 
-      const newSubAccount = (await baseProvider.request({
+      const newSubAccount = (await provider.request({
         method: "wallet_addSubAccount",
         params: [
           {
@@ -118,19 +141,25 @@ export const useBaseAccount = () => {
         ],
       })) as SubAccount;
 
-      setSubAccount(newSubAccount);
+      const normalizedAddress = normalizeHexAddress(newSubAccount.address, "Sub account address");
+      const normalizedSubAccount: SubAccount = {
+        ...newSubAccount,
+        address: normalizedAddress,
+      };
+
+      setSubAccount(normalizedSubAccount);
 
       // Log quando sub account é criada
       console.log("✅ Nova Sub Account criada com sucesso!");
-      console.log("📍 Endereço da Sub Account:", newSubAccount.address);
-      console.log("📦 Dados completos:", newSubAccount);
+      console.log("📍 Endereço da Sub Account:", normalizedAddress);
+      console.log("📦 Dados completos:", normalizedSubAccount);
 
       // Salva no localStorage
       if (typeof window !== "undefined") {
-        localStorage.setItem("subAccount", JSON.stringify(newSubAccount));
+        localStorage.setItem("subAccount", JSON.stringify(normalizedSubAccount));
       }
 
-      return newSubAccount;
+      return normalizedSubAccount;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Erro ao criar sub account";
       setError(errorMessage);
@@ -202,7 +231,8 @@ export const useBaseAccount = () => {
         setIsLoading(true);
         setError(null);
 
-        const callsId = (await baseProvider.request({
+        const provider = getBaseProvider();
+        const callsId = (await provider.request({
           method: "wallet_sendCalls",
           params: [
             {

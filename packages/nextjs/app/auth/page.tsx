@@ -4,11 +4,28 @@ import { useState } from "react";
 import Link from "next/link";
 import type { NextPage } from "next";
 import { LockClosedIcon, UserIcon } from "@heroicons/react/24/outline";
-import { baseProvider } from "~~/services/base/baseAccountSDK";
-import { type UserType, setUserType } from "~~/utils/auth";
+import { getBaseProvider } from "~~/services/base/baseAccountSDK";
+import { type UserType, setAuthToken, setUserType } from "~~/utils/auth";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
+
+const ensureHexAddress = (address: string, label: string) => {
+  if (!address) {
+    throw new Error(`${label} is empty`);
+  }
+
+  const normalized = address.trim().toLowerCase();
+
+  if (!normalized.startsWith("0x")) {
+    throw new Error(`${label} must start with 0x. Received: ${address}`);
+  }
+
+  return normalized;
+};
 
 const Auth: NextPage = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -69,21 +86,67 @@ const Auth: NextPage = () => {
     e.preventDefault();
 
     if (validateForm()) {
+      setIsLoading(true);
+
       if (isLogin) {
-        console.log("Login:", { username: formData.username, password: formData.password });
+        console.log("🔐 Iniciando login...");
 
-        // TODO: Aqui você fará a requisição para o backend
-        // const response = await fetch('/api/auth/login', { ... });
-        // const { token, userType } = response.json();
-        // localStorage.setItem('token', token);
+        try {
+          const loginResponse = await fetch(`${API_BASE_URL}/auth/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: formData.username,
+              password: formData.password,
+            }),
+          });
 
-        // Mock: Simula resposta do JWT
-        // Para teste: usernames começando com "gov" redirecionam para governo
-        const userType: UserType = formData.username.toLowerCase().startsWith("gov") ? "governo" : "participante";
-        setUserType(userType);
+          const loginData = await loginResponse.json();
 
-        // Redireciona baseado no tipo de usuário do JWT
-        window.location.href = userType === "governo" ? "/governo/dashboard" : "/participante/dashboard";
+          if (!loginResponse.ok) {
+            console.error("❌ Erro ao fazer login:", loginData);
+            alert(loginData?.message || loginData?.error || "Failed to login. Please check your credentials.");
+            return;
+          }
+
+          console.log("✅ Login bem-sucedido!");
+          console.log("📊 Dados do usuário:", loginData.user);
+          console.log("🔑 Token recebido");
+
+          // Salvar token
+          if (loginData.token) {
+            setAuthToken(loginData.token);
+            localStorage.setItem("token", loginData.token);
+          }
+
+          // Salvar dados do usuário
+          if (loginData.user) {
+            localStorage.setItem("user", JSON.stringify(loginData.user));
+            if (loginData.user.walletAddress) {
+              localStorage.setItem("subAccount", JSON.stringify({ address: loginData.user.walletAddress }));
+            }
+            if (loginData.user.universalAddress) {
+              localStorage.setItem("universalAddress", loginData.user.universalAddress);
+            }
+          }
+
+          // Determinar tipo de usuário
+          const userType: UserType = formData.username.toLowerCase().startsWith("gov") ? "governo" : "participante";
+          setUserType(userType);
+
+          console.log("🎯 Tipo de usuário:", userType);
+          console.log("🚀 Redirecionando...");
+
+          window.location.href = userType === "governo" ? "/governo/dashboard" : "/participante/dashboard";
+        } catch (error) {
+          console.error("❌ Erro ao fazer login:", error);
+          alert(
+            error instanceof Error ? error.message : "Failed to login. Please check your connection and try again.",
+          );
+          setIsLoading(false);
+        }
       } else {
         console.log("Signup:", {
           username: formData.username,
@@ -95,20 +158,26 @@ const Auth: NextPage = () => {
           console.log("🔷 CRIANDO CONTA - Processo BASE Account");
           console.log("═══════════════════════════════════════");
 
+          const provider = getBaseProvider();
+
           // PASSO 1: Conectar conta universal
           console.log("🔄 PASSO 1: Conectando Universal Account...");
-          const accounts = (await baseProvider.request({
+          const accounts = (await provider.request({
             method: "eth_requestAccounts",
             params: [],
           })) as string[];
 
-          const universalAddress = accounts[0];
+          const universalAddress = ensureHexAddress(accounts[0], "Universal address");
           console.log("✅ Universal Account conectada!");
           console.log("📍 Universal Address:", universalAddress);
 
+          if (typeof window !== "undefined") {
+            localStorage.setItem("universalAddress", universalAddress);
+          }
+
           // PASSO 2: Verificar se já existe Sub Account
           console.log("\n🔄 PASSO 2: Verificando Sub Accounts existentes...");
-          const result = (await baseProvider.request({
+          const result = (await provider.request({
             method: "wallet_getSubAccounts",
             params: [
               {
@@ -121,22 +190,19 @@ const Auth: NextPage = () => {
           let subAccountAddress = "";
 
           if (result.subAccounts && result.subAccounts.length > 0) {
-            // Já existe Sub Account
             const existingSub = result.subAccounts[0];
-            subAccountAddress = existingSub.address;
+            subAccountAddress = ensureHexAddress(existingSub.address, "Sub account address");
 
             console.log("✅ Sub Account EXISTENTE encontrada!");
             console.log("📍 Sub Account Address:", subAccountAddress);
             console.log("📦 Dados completos:", existingSub);
 
-            // Salva no localStorage
-            localStorage.setItem("subAccount", JSON.stringify(existingSub));
+            localStorage.setItem("subAccount", JSON.stringify({ ...existingSub, address: subAccountAddress }));
           } else {
-            // Criar nova Sub Account
             console.log("ℹ️ Nenhuma Sub Account encontrada.");
             console.log("\n🔄 PASSO 3: Criando NOVA Sub Account...");
 
-            const newSubAccount = (await baseProvider.request({
+            const newSubAccount = (await provider.request({
               method: "wallet_addSubAccount",
               params: [
                 {
@@ -145,14 +211,13 @@ const Auth: NextPage = () => {
               ],
             })) as { address: string; type: string };
 
-            subAccountAddress = newSubAccount.address;
+            subAccountAddress = ensureHexAddress(newSubAccount.address, "Sub account address");
 
             console.log("✅ NOVA Sub Account criada com sucesso!");
             console.log("📍 Sub Account Address:", subAccountAddress);
             console.log("📦 Dados completos:", newSubAccount);
 
-            // Salva no localStorage
-            localStorage.setItem("subAccount", JSON.stringify(newSubAccount));
+            localStorage.setItem("subAccount", JSON.stringify({ ...newSubAccount, address: subAccountAddress }));
           }
 
           console.log("\n═══════════════════════════════════════");
@@ -164,34 +229,68 @@ const Auth: NextPage = () => {
           console.log("  • Sub Account:", subAccountAddress);
           console.log("═══════════════════════════════════════");
 
-          // TODO: Salvar no backend
-          // await fetch('/api/auth/signup', {
-          //   method: 'POST',
-          //   body: JSON.stringify({
-          //     username: formData.username,
-          //     password: formData.password,
-          //     universalAddress: universalAddress,
-          //     subAccountAddress: subAccountAddress
-          //   })
-          // });
+          // Enviar dados para o backend
+          const payload = {
+            username: formData.username,
+            password: formData.password,
+            universalAddress,
+            walletAddress: subAccountAddress,
+          };
 
-          // Mock: Simula resposta do JWT após cadastro
-          // Usernames começando com "gov" são governo
-          const userType: UserType = formData.username.toLowerCase().startsWith("gov") ? "governo" : "participante";
-          setUserType(userType);
+          const registerResponse = await fetch(`${API_BASE_URL}/auth/register`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          const rawResponse = await registerResponse.text();
+          let registerData: any = null;
+          if (rawResponse) {
+            try {
+              registerData = JSON.parse(rawResponse);
+            } catch (parseError) {
+              console.warn("Não foi possível parsear a resposta JSON do backend:", parseError);
+            }
+          }
+
+          if (!registerResponse.ok) {
+            console.error("❌ Erro ao registrar no backend:", registerData ?? rawResponse);
+            throw new Error(registerData?.error ?? registerResponse.statusText ?? "Failed to register user in backend");
+          }
+
+          console.log("✅ Registro backend concluído:", registerData);
+
+          if (registerData?.token) {
+            localStorage.setItem("token", registerData.token);
+          }
+
+          const backendUserType = registerData?.userType as UserType | undefined;
+          const derivedUserType: UserType = backendUserType
+            ? backendUserType
+            : formData.username.toLowerCase().startsWith("gov")
+              ? "governo"
+              : "participante";
+
+          setUserType(derivedUserType);
 
           alert(
             `Conta criada com sucesso!\n\nSub Account: ${subAccountAddress}\n\nVerifique o console para mais detalhes.`,
           );
 
-          // Redireciona baseado no tipo de usuário
-          window.location.href = userType === "governo" ? "/governo/dashboard" : "/participante/dashboard";
+          window.location.href = derivedUserType === "governo" ? "/governo/dashboard" : "/participante/dashboard";
         } catch (error) {
           console.error("═══════════════════════════════════════");
           console.error("❌ ERRO ao criar conta e Sub Account:");
           console.error(error);
           console.error("═══════════════════════════════════════");
-          alert("Erro ao criar conta. Certifique-se de ter uma carteira Web3 instalada (Coinbase Wallet ou MetaMask).");
+          alert(
+            error instanceof Error
+              ? error.message
+              : "Erro ao criar conta. Certifique-se de ter uma carteira Web3 instalada (Coinbase Wallet ou MetaMask).",
+          );
+          setIsLoading(false);
         }
       }
     }
@@ -331,8 +430,15 @@ const Auth: NextPage = () => {
             )}
 
             {/* Submit Button */}
-            <button type="submit" className="btn btn-primary w-full">
-              {isLogin ? "Sign In" : "Create Account"}
+            <button type="submit" className="btn btn-primary w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>
+                  {isLogin ? "Signing In..." : "Creating Account..."}
+                </>
+              ) : (
+                <>{isLogin ? "Sign In" : "Create Account"}</>
+              )}
             </button>
 
             {/* Alternative Action */}

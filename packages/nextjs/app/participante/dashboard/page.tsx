@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { NextPage } from "next";
 import {
@@ -8,10 +9,48 @@ import {
   ClockIcon,
   DocumentTextIcon,
   MagnifyingGlassIcon,
+  ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
 import { BaseAccountConnect } from "~~/components/BaseAccountConnect";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
+
 const ParticipanteHome: NextPage = () => {
+  const [hasCertificate, setHasCertificate] = useState(false);
+  const [isCheckingCertificate, setIsCheckingCertificate] = useState(true);
+
+  useEffect(() => {
+    // Check certificate status from backend
+    const checkCertificateStatus = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsCheckingCertificate(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/bid/certificate-status`, {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setHasCertificate(data.hasCertificate && data.certificateStatus && data.canBid);
+        }
+      } catch (error) {
+        console.error("Error checking certificate status:", error);
+      } finally {
+        setIsCheckingCertificate(false);
+      }
+    };
+
+    checkCertificateStatus();
+  }, []);
+
   return (
     <div className="min-h-screen bg-base-100">
       {/* Header */}
@@ -66,8 +105,70 @@ const ParticipanteHome: NextPage = () => {
           </div>
         </div>
 
+        {/* Certificate Alert */}
+        {!isCheckingCertificate && !hasCertificate && (
+          <div className="alert alert-warning mb-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+            <div className="flex-1">
+              <h3 className="font-bold">Digital Certificate Required</h3>
+              <p className="text-sm">You need a digital certificate to participate in bids.</p>
+            </div>
+            <Link href="/participante/certificado">
+              <button className="btn btn-sm btn-primary">Get Certificate</button>
+            </Link>
+          </div>
+        )}
+
+        {!isCheckingCertificate && hasCertificate && (
+          <div className="alert alert-success mb-6">
+            <CheckCircleIcon className="h-6 w-6" />
+            <div className="flex-1">
+              <h3 className="font-bold">Certificate Active</h3>
+              <p className="text-sm">You&apos;re qualified to participate in all public bids.</p>
+            </div>
+            <Link href="/participante/certificado">
+              <button className="btn btn-sm btn-outline">View Certificate</button>
+            </Link>
+          </div>
+        )}
+
         {/* Ações rápidas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Link href="/participante/certificado">
+            <div
+              className={`card bg-base-100 border-2 transition-all cursor-pointer hover:shadow-lg ${
+                hasCertificate
+                  ? "border-success hover:border-success"
+                  : "border-warning hover:border-warning animate-pulse"
+              }`}
+            >
+              <div className="card-body items-center text-center relative">
+                {hasCertificate && (
+                  <div className="absolute top-2 right-2">
+                    <CheckCircleIcon className="w-5 h-5 text-success" />
+                  </div>
+                )}
+                <div className={`p-4 rounded-full mb-4 ${hasCertificate ? "bg-success/10" : "bg-warning/10"}`}>
+                  <ShieldCheckIcon className={`w-8 h-8 ${hasCertificate ? "text-success" : "text-warning"}`} />
+                </div>
+                <h3 className="card-title text-lg">Certificate</h3>
+                <p className="text-sm text-base-content/70">{hasCertificate ? "Active & Valid" : "Required to bid"}</p>
+              </div>
+            </div>
+          </Link>
+
           <Link href="/licitacoes">
             <div className="card bg-base-100 border-2 border-base-300 hover:border-primary transition-all cursor-pointer hover:shadow-lg">
               <div className="card-body items-center text-center">
