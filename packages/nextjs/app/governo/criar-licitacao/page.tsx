@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { NextPage } from "next";
 import {
@@ -25,6 +25,11 @@ const CriarLicitacao: NextPage = () => {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Debug: Verificar se o componente está montando
+  useEffect(() => {
+    console.log("🔵 CriarLicitacao component mounted");
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -52,17 +57,21 @@ const CriarLicitacao: NextPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("🔵 Form submitted, formData:", formData);
+    console.log("🔵 Validating form...");
 
     if (validateForm()) {
-      console.log("Bid created:", formData);
+      console.log("✅ Form is valid, bid created:", formData);
       alert("Bid created successfully!");
       // Redirect to bids list
       window.location.href = "/governo/dashboard";
+    } else {
+      console.log("❌ Form validation failed, errors:", errors);
     }
   };
 
   return (
-    <div className="min-h-screen bg-base-100">
+    <div>
       {/* Header */}
       <div className="bg-primary py-6 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
@@ -111,14 +120,14 @@ const CriarLicitacao: NextPage = () => {
                   <span className="label-text font-semibold">Contracting Party *</span>
                 </label>
                 <div className="relative">
-                  <BuildingOfficeIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/40" />
+                  <BuildingOfficeIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/40 z-10 pointer-events-none" />
                   <input
                     type="text"
                     name="contractingParty"
                     value={formData.contractingParty}
                     onChange={handleInputChange}
                     placeholder="Ex: City Hall of Belo Horizonte"
-                    className={`input input-bordered w-full pl-10 ${errors.contractingParty ? "input-error" : ""}`}
+                    className={`input input-bordered w-full pl-9 ${errors.contractingParty ? "input-error" : ""}`}
                   />
                 </div>
                 {errors.contractingParty && <span className="text-error text-sm mt-1">{errors.contractingParty}</span>}
@@ -158,7 +167,7 @@ const CriarLicitacao: NextPage = () => {
                   value={formData.description}
                   onChange={handleInputChange}
                   placeholder="Describe in detail the subject of the bid, including technical specifications, quantity, execution deadline, etc."
-                  className={`textarea textarea-bordered h-32 ${errors.description ? "textarea-error" : ""}`}
+                  className={`textarea textarea-bordered w-full h-48 ${errors.description ? "textarea-error" : ""}`}
                 />
                 {errors.description && <span className="text-error text-sm mt-1">{errors.description}</span>}
               </div>
@@ -238,30 +247,28 @@ const CriarLicitacao: NextPage = () => {
               {/* Requirements */}
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-semibold">Participation Requirements</span>
-                  <span className="label-text-alt text-base-content/60">Optional</span>
+                  <span className="label-text font-semibold">Participation Requirements</span>{" "}
                 </label>
                 <textarea
                   name="requirements"
                   value={formData.requirements}
                   onChange={handleInputChange}
                   placeholder="List the requirements needed to participate in this bid (certifications, previous experience, etc.)"
-                  className="textarea textarea-bordered h-24"
+                  className="textarea textarea-bordered w-full h-24"
                 />
               </div>
 
               {/* Required Documents */}
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-semibold">Required Documents</span>
-                  <span className="label-text-alt text-base-content/60">Optional</span>
+                  <span className="label-text font-semibold">Required Documents</span>{" "}
                 </label>
                 <textarea
                   name="documents"
                   value={formData.documents}
                   onChange={handleInputChange}
                   placeholder="List the documents that must be submitted by participants"
-                  className="textarea textarea-bordered h-24"
+                  className="textarea textarea-bordered w-full h-24"
                 />
               </div>
             </div>

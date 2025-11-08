@@ -296,8 +296,28 @@ const Auth: NextPage = () => {
     }
   };
 
-  const toggleMode = () => {
+  const toggleMode = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setIsLogin(!isLogin);
+    setFormData({
+      username: "",
+      password: "",
+      confirmPassword: "",
+    });
+    setErrors({
+      username: "",
+      password: "",
+      confirmPassword: "",
+    });
+  };
+
+  const handleTabClick = (isLoginMode: boolean, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsLogin(isLoginMode);
     setFormData({
       username: "",
       password: "",
@@ -326,7 +346,8 @@ const Auth: NextPage = () => {
           {/* Toggle Tabs */}
           <div className="flex border-b border-base-300">
             <button
-              onClick={() => setIsLogin(true)}
+              type="button"
+              onClick={e => handleTabClick(true, e)}
               className={`flex-1 py-3 text-center text-sm font-semibold transition-all ${
                 isLogin
                   ? "text-primary border-b-2 border-primary bg-base-200/50"
@@ -336,7 +357,8 @@ const Auth: NextPage = () => {
               Login
             </button>
             <button
-              onClick={() => setIsLogin(false)}
+              type="button"
+              onClick={e => handleTabClick(false, e)}
               className={`flex-1 py-3 text-center text-sm font-semibold transition-all ${
                 !isLogin
                   ? "text-primary border-b-2 border-primary bg-base-200/50"
@@ -445,7 +467,7 @@ const Auth: NextPage = () => {
             <div className="text-center">
               <p className="text-sm text-base-content/60">
                 {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-                <button type="button" onClick={toggleMode} className="link link-primary font-semibold">
+                <button type="button" onClick={e => toggleMode(e)} className="link link-primary font-semibold">
                   {isLogin ? "Sign up" : "Sign in"}
                 </button>
               </p>

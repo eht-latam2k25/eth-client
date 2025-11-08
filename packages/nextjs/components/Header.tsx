@@ -38,8 +38,10 @@ export const HeaderMenuLinks = () => {
               href={href}
               passHref
               className={`${
-                isActive ? "bg-secondary shadow-md" : ""
-              } hover:bg-secondary hover:shadow-md focus:!bg-secondary active:!text-neutral py-1.5 px-3 text-sm rounded-full gap-2 grid grid-flow-col`}
+                isActive
+                  ? "bg-primary text-primary-content shadow-md font-semibold"
+                  : "text-base-content hover:text-primary"
+              } hover:bg-primary/10 focus:!bg-primary focus:!text-primary-content active:!bg-primary active:!text-primary-content py-1.5 px-3 text-sm rounded-full gap-2 grid grid-flow-col transition-all`}
             >
               {icon}
               <span>{label}</span>
@@ -96,8 +98,13 @@ export const Header = () => {
   }, []);
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 shrink-0 justify-between z-20 shadow-md px-0 sm:px-2 border-b border-base-300">
+    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 shrink-0 justify-between z-20 shadow-md px-0 sm:px-2 border-b border-base-300 py-0 !py-0">
       <div className="navbar-start w-auto lg:w-1/2">
+        <Link href="/" passHref className="lg:hidden flex items-center gap-0 ml-1 shrink-0 !py-0">
+          <div className="flex relative w-48 h-16 -my-1">
+            <Image alt="OnLicit logo" className="cursor-pointer object-contain" fill src="/OnLicit.png" />
+          </div>
+        </Link>
         <details className="dropdown" ref={burgerMenuRef}>
           <summary className="ml-1 btn btn-ghost lg:hidden hover:bg-transparent">
             <Bars3Icon className="h-1/2" />
@@ -136,13 +143,9 @@ export const Header = () => {
             )}
           </ul>
         </details>
-        <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
-          <div className="flex relative w-10 h-10">
-            <Image alt="App logo" className="cursor-pointer" fill src="/logo.svg" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold leading-tight">OnLicit</span>
-            <span className="text-xs">Online Bids</span>
+        <Link href="/" passHref className="hidden lg:flex items-center gap-0 ml-2 mr-3 shrink-0 !py-0">
+          <div className="flex relative w-64 h-24 -my-1">
+            <Image alt="OnLicit logo" className="cursor-pointer object-contain" fill src="/OnLicit.png" />
           </div>
         </Link>
         <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
